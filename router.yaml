@@ -1,0 +1,35 @@
+supergraph:
+  introspection: true
+  path: /
+  listen: 0.0.0.0:4000
+
+homepage:
+  enabled: false
+
+sandbox:
+  enabled: true
+
+telemetry:
+  apollo:
+    field_level_instrumentation_sampler: always_on
+    errors:
+      subgraph:
+        all:
+          redact: false
+          send: true
+  metrics:
+    prometheus:
+      enabled: true
+      path: /metrics
+      listen: 0.0.0.0:9090
+  tracing:
+    propagation:
+      zipkin: true
+    trace_config:
+      parent_based_sampler: true
+      service_name: router
+      service_namespace: apollo
+      sampler: always_on
+    otlp:
+      endpoint: collector:4317
+      protocol: grpc
