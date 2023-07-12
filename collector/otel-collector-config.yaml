@@ -1,0 +1,43 @@
+receivers:
+  otlp:
+    protocols:
+      grpc:
+      http:
+  otlp/spanmetrics:
+    protocols:
+      grpc:
+        endpoint: 0.0.0.0:12346
+
+processors:
+  batch:
+  spanmetrics:
+    metrics_exporter: prometheus
+
+exporters:
+  zipkin:
+    endpoint: http://zipkin:9411/api/v2/spans
+    tls:
+      insecure: true
+  logging:
+  prometheus:
+    endpoint: "0.0.0.0:9464"
+extensions:
+  health_check:
+  pprof:
+  zpages:
+
+service:
+  extensions: [health_check, pprof, zpages]
+  pipelines:
+    traces:
+      receivers: [otlp]
+      processors: [batch, spanmetrics]
+      exporters: [zipkin, logging]
+    metrics:
+      receivers: [otlp/spanmetrics, otlp]
+      processors: [batch]
+      exporters: [prometheus, logging]
+    # logs:
+    #   receivers: [otlp]
+    #   processors: [batch]
+    #   exporters: [otlp]

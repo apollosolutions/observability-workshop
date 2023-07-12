@@ -1,0 +1,27 @@
+apiVersion: 1
+
+datasources:
+  - name: Prometheus
+    type: prometheus
+    access: proxy
+    url: http://prometheus:9090/
+    user: ""
+    database: ""
+    basicAuth: false
+    isDefault: false
+    jsonData:
+      httpMethod: POST
+      prometheusType: Prometheus
+      prometheusVersion: 2.40.1
+      tlsSkipVerify: true
+    readOnly: false
+  - name: Zipkin
+    type: zipkin
+    access: proxy
+    url: http://zipkin:9411/
+    user: ""
+    database: ""
+    basicAuth: false
+    isDefault: false
+    jsonData: {}
+    readOnly: false

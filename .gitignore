@@ -1,0 +1,5 @@
+router
+*.exe
+.env*
+grafana/data/*
+!grafana/data/.gitkeep

@@ -1,0 +1,26 @@
+extend schema
+  @link(
+    url: "https://specs.apollo.dev/federation/v2.3",
+    import: [
+      "@key", "@extends", "@shareable", "@inaccessible", "@override", "@external", "@provides", "@requires", "@tag",
+      "@composeDirective", "@interfaceObject"
+    ]
+  )
+
+type Query {
+  posts: [Post!]!
+  post(id:ID!): Post!
+}
+
+type User @key(fields: "id") {
+  id: ID!
+  posts: [Post!]!
+}
+
+type Post @key(fields:"id"){
+  id: ID!
+  title: String!
+  content: String!
+  author: User!
+}
+
