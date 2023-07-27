@@ -22,6 +22,7 @@ export type Post = {
   __typename?: 'Post';
   author: User;
   content: Scalars['String']['output'];
+  featuredImage?: Maybe<Scalars['String']['output']>;
   id: Scalars['ID']['output'];
   title: Scalars['String']['output'];
 };
@@ -148,6 +149,7 @@ export type PostResolvers<ContextType = DataSourceContext, ParentType extends Re
   __resolveReference?: ReferenceResolver<Maybe<ResolversTypes['Post']>, { __typename: 'Post' } & GraphQLRecursivePick<ParentType, {"id":true}>, ContextType>;
   author?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
   content?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  featuredImage?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   title?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;

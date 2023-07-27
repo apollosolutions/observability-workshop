@@ -1,7 +1,7 @@
 {
-    "yaml.schemas": {
-        ".vscode/configuration_schema.json": [
-            "router.yaml"
-        ]
-    }
+  "yaml.schemas": {
+    ".vscode/configuration_schema.json": ["router.yaml"]
+  },
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode"
 }

@@ -1,19 +1,28 @@
 services:
   router:
     container_name: router
-    image: ghcr.io/apollographql/router:v1.19.1
+    image: ghcr.io/apollographql/router:v1.24.0
     volumes:
       - ./router.yaml:/dist/config/router.yaml
     env_file:
       - .env
     ports:
       - 4000:4000
+      - 9090:9090
+    command: --hr
   users:
     container_name: users
     build: subgraphs/users
+    environment:
+      DATASOURCE_URL: http://datasource:8888
   posts:
     container_name: posts
     build: subgraphs/posts
+    environment:
+      DATASOURCE_URL: http://datasource:8888
+  datasource:
+    container_name: datasource
+    build: datasource
   prometheus:
     container_name: prometheus
     image: prom/prometheus
@@ -24,11 +33,11 @@ services:
   grafana:
     image: grafana/grafana
     container_name: grafana
-    user: '0'
+    user: "0"
     ports:
-      - '3000:3000'
+      - "3000:3000"
     volumes:
-      - './grafana/data:/var/lib/grafana'
+      - "./grafana/data:/var/lib/grafana"
   otel-collector:
     container_name: collector
     image: otel/opentelemetry-collector-contrib
