@@ -29,6 +29,12 @@ export type Address = {
   streetAddress2?: Maybe<Scalars['String']['output']>;
 };
 
+export type Post = {
+  __typename?: 'Post';
+  content: Scalars['String']['output'];
+  id: Scalars['ID']['output'];
+};
+
 export type Query = {
   __typename?: 'Query';
   user?: Maybe<User>;
@@ -47,6 +53,7 @@ export type User = {
   email: Scalars['String']['output'];
   id: Scalars['ID']['output'];
   name: Scalars['String']['output'];
+  posts: Array<Post>;
 };
 
 export type WithIndex<TObject> = TObject & Record<string, any>;
@@ -134,8 +141,9 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 export type ResolversTypes = ResolversObject<{
   Address: ResolverTypeWrapper<DeepPartial<Address>>;
   String: ResolverTypeWrapper<DeepPartial<Scalars['String']['output']>>;
-  Query: ResolverTypeWrapper<{}>;
+  Post: ResolverTypeWrapper<DeepPartial<Post>>;
   ID: ResolverTypeWrapper<DeepPartial<Scalars['ID']['output']>>;
+  Query: ResolverTypeWrapper<{}>;
   User: ResolverTypeWrapper<DeepPartial<User>>;
   Boolean: ResolverTypeWrapper<DeepPartial<Scalars['Boolean']['output']>>;
 }>;
@@ -144,8 +152,9 @@ export type ResolversTypes = ResolversObject<{
 export type ResolversParentTypes = ResolversObject<{
   Address: DeepPartial<Address>;
   String: DeepPartial<Scalars['String']['output']>;
-  Query: {};
+  Post: DeepPartial<Post>;
   ID: DeepPartial<Scalars['ID']['output']>;
+  Query: {};
   User: DeepPartial<User>;
   Boolean: DeepPartial<Scalars['Boolean']['output']>;
 }>;
@@ -160,6 +169,13 @@ export type AddressResolvers<ContextType = DataSourceContext, ParentType extends
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
+export type PostResolvers<ContextType = DataSourceContext, ParentType extends ResolversParentTypes['Post'] = ResolversParentTypes['Post']> = ResolversObject<{
+  __resolveReference?: ReferenceResolver<Maybe<ResolversTypes['Post']>, { __typename: 'Post' } & GraphQLRecursivePick<ParentType, {"id":true}>, ContextType>;
+
+  id?: Resolver<ResolversTypes['ID'], { __typename: 'Post' } & GraphQLRecursivePick<ParentType, {"id":true}>, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
 export type QueryResolvers<ContextType = DataSourceContext, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = ResolversObject<{
   user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QueryUserArgs, 'id'>>;
   users?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType>;
@@ -167,16 +183,18 @@ export type QueryResolvers<ContextType = DataSourceContext, ParentType extends R
 
 export type UserResolvers<ContextType = DataSourceContext, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = ResolversObject<{
   __resolveReference?: ReferenceResolver<Maybe<ResolversTypes['User']>, { __typename: 'User' } & GraphQLRecursivePick<ParentType, {"id":true}>, ContextType>;
-  address?: Resolver<ResolversTypes['Address'], ParentType, ContextType>;
-  bio?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  email?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
-  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  address?: Resolver<ResolversTypes['Address'], { __typename: 'User' } & GraphQLRecursivePick<ParentType, {"id":true}>, ContextType>;
+  bio?: Resolver<ResolversTypes['String'], { __typename: 'User' } & GraphQLRecursivePick<ParentType, {"id":true}> & GraphQLRecursivePick<ParentType, {"posts":{"content":true}}>, ContextType>;
+  email?: Resolver<ResolversTypes['String'], { __typename: 'User' } & GraphQLRecursivePick<ParentType, {"id":true}>, ContextType>;
+  id?: Resolver<ResolversTypes['ID'], { __typename: 'User' } & GraphQLRecursivePick<ParentType, {"id":true}>, ContextType>;
+  name?: Resolver<ResolversTypes['String'], { __typename: 'User' } & GraphQLRecursivePick<ParentType, {"id":true}>, ContextType>;
+
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
 export type Resolvers<ContextType = DataSourceContext> = ResolversObject<{
   Address?: AddressResolvers<ContextType>;
+  Post?: PostResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
   User?: UserResolvers<ContextType>;
 }>;

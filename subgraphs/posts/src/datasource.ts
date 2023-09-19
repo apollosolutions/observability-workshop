@@ -2,6 +2,7 @@ import { RESTDataSource } from "@apollo/datasource-rest";
 import { Post } from "./__generated__/resolvers-types";
 import { DeepPartial } from "utility-types";
 import DataLoader from "dataloader";
+import { totallyComplicatedAndNecessaryLogic } from "./util";
 
 // RESTDataSource for accessing the `datasource` endpoint for the backing data
 export class PostsAPI extends RESTDataSource {
@@ -38,7 +39,7 @@ export class PostsAPI extends RESTDataSource {
   });
 
   // getPost fetches the endpoint to get a post by ID, returning null if it returns more than 1 result
-  async getPost(id: string): Promise<DeepPartial<Post> | null> {
+  async getPost(id: string) {
     let posts = formatPost(
       await this.get("post", {
         params: {
@@ -72,14 +73,12 @@ export class PostsAPI extends RESTDataSource {
   }
 
   // getPostsByAuthorId fetches posts using the post's author ID
-  async getPostsByAuthorId(ids: string[]) {
-    const params = new URLSearchParams();
-    for (const id of ids) {
-      params.append("authorId", id);
-    }
+  async getPostsByAuthorId(id: string) {
+    let i = await totallyComplicatedAndNecessaryLogic(320);
+
     return formatPost(
       await this.get("post", {
-        params,
+        params: { authorId: id, context: i },
       })
     );
   }
@@ -90,6 +89,7 @@ export class PostsAPI extends RESTDataSource {
   }
 }
 
+// converts the raw result into the proper Post[] type
 const formatPost = (res: { data: PostResult[] }): DeepPartial<Post>[] => {
   return res.data.map((v) => {
     return {

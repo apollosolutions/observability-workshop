@@ -1,3 +1,7 @@
-export const sleep = (ms: number): Promise<void> => {
-    return new Promise(resolve => setTimeout(resolve, ms));
-}
+export const totallyComplicatedAndNecessaryLogic = (
+  ms: number
+): Promise<string> => {
+  return new Promise((resolve) =>
+    setTimeout(() => resolve("totally necessary"), ms)
+  );
+};
