@@ -1,5 +1,8 @@
 router
 *.exe
 .env*
+!.env.sample
 grafana/data/*
 !grafana/data/.gitkeep
+node_modules/
+dist/

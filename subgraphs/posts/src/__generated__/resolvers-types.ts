@@ -1,5 +1,6 @@
 import { GraphQLResolveInfo } from 'graphql';
 import { DataSourceContext } from '../types/DataSourceContext';
+import { DeepPartial } from 'utility-types';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -127,22 +128,22 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = ResolversObject<{
-  Post: ResolverTypeWrapper<Partial<Post>>;
-  String: ResolverTypeWrapper<Partial<Scalars['String']['output']>>;
-  ID: ResolverTypeWrapper<Partial<Scalars['ID']['output']>>;
+  Post: ResolverTypeWrapper<DeepPartial<Post>>;
+  String: ResolverTypeWrapper<DeepPartial<Scalars['String']['output']>>;
+  ID: ResolverTypeWrapper<DeepPartial<Scalars['ID']['output']>>;
   Query: ResolverTypeWrapper<{}>;
-  User: ResolverTypeWrapper<Partial<User>>;
-  Boolean: ResolverTypeWrapper<Partial<Scalars['Boolean']['output']>>;
+  User: ResolverTypeWrapper<DeepPartial<User>>;
+  Boolean: ResolverTypeWrapper<DeepPartial<Scalars['Boolean']['output']>>;
 }>;
 
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = ResolversObject<{
-  Post: Partial<Post>;
-  String: Partial<Scalars['String']['output']>;
-  ID: Partial<Scalars['ID']['output']>;
+  Post: DeepPartial<Post>;
+  String: DeepPartial<Scalars['String']['output']>;
+  ID: DeepPartial<Scalars['ID']['output']>;
   Query: {};
-  User: Partial<User>;
-  Boolean: Partial<Scalars['Boolean']['output']>;
+  User: DeepPartial<User>;
+  Boolean: DeepPartial<Scalars['Boolean']['output']>;
 }>;
 
 export type PostResolvers<ContextType = DataSourceContext, ParentType extends ResolversParentTypes['Post'] = ResolversParentTypes['Post']> = ResolversObject<{

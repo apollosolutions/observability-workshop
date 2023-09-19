@@ -8,14 +8,15 @@
     "sourceMap": true,
     "declaration": true,
     "declarationMap": true,
-    "removeComments": true, 
+    "removeComments": true,
     "skipLibCheck": true,
     "noImplicitAny": true,
     "noImplicitReturns": true,
+    "strictNullChecks": true,
     "noFallthroughCasesInSwitch": true,
     "forceConsistentCasingInFileNames": true,
     "lib": ["esnext", "esnext.asynciterable", "DOM"],
-    "types": ["node", "jest"],
+    "types": ["node"],
     "baseUrl": ".",
     "paths": {
       "*": ["types/*"]

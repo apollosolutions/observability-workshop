@@ -1,4 +1,3 @@
-// Import required symbols
 import { NodeSDK } from "@opentelemetry/sdk-node";
 import { PeriodicExportingMetricReader } from "@opentelemetry/sdk-metrics";
 import { OTLPTraceExporter } from "@opentelemetry/exporter-trace-otlp-grpc";
@@ -9,7 +8,8 @@ import { registerInstrumentations } from "@opentelemetry/instrumentation";
 import { OTLPMetricExporter } from "@opentelemetry/exporter-metrics-otlp-proto";
 
 const collectorOptions = {
-  url: "http://collector:4317",
+  url: "http://localhost:4317",
+  timeoutMillis: 500,
 };
 
 registerInstrumentations({
@@ -24,6 +24,7 @@ const sdk = new NodeSDK({
   traceExporter: new OTLPTraceExporter(collectorOptions),
   metricReader: new PeriodicExportingMetricReader({
     exporter: new OTLPMetricExporter(collectorOptions),
+    exportIntervalMillis: 500,
   }),
 });
 

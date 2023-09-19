@@ -1,5 +1,6 @@
 import { GraphQLResolveInfo } from 'graphql';
 import { DataSourceContext } from '../types/DataSourceContext';
+import { DeepPartial } from 'utility-types';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -18,6 +19,16 @@ export type Scalars = {
   _FieldSet: { input: any; output: any; }
 };
 
+export type Address = {
+  __typename?: 'Address';
+  city: Scalars['String']['output'];
+  country: Scalars['String']['output'];
+  postCode: Scalars['String']['output'];
+  state: Scalars['String']['output'];
+  streetAddress1: Scalars['String']['output'];
+  streetAddress2?: Maybe<Scalars['String']['output']>;
+};
+
 export type Query = {
   __typename?: 'Query';
   user?: Maybe<User>;
@@ -31,6 +42,8 @@ export type QueryUserArgs = {
 
 export type User = {
   __typename?: 'User';
+  address: Address;
+  bio: Scalars['String']['output'];
   email: Scalars['String']['output'];
   id: Scalars['ID']['output'];
   name: Scalars['String']['output'];
@@ -119,20 +132,32 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = ResolversObject<{
+  Address: ResolverTypeWrapper<DeepPartial<Address>>;
+  String: ResolverTypeWrapper<DeepPartial<Scalars['String']['output']>>;
   Query: ResolverTypeWrapper<{}>;
-  ID: ResolverTypeWrapper<Scalars['ID']['output']>;
-  User: ResolverTypeWrapper<User>;
-  String: ResolverTypeWrapper<Scalars['String']['output']>;
-  Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
+  ID: ResolverTypeWrapper<DeepPartial<Scalars['ID']['output']>>;
+  User: ResolverTypeWrapper<DeepPartial<User>>;
+  Boolean: ResolverTypeWrapper<DeepPartial<Scalars['Boolean']['output']>>;
 }>;
 
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = ResolversObject<{
+  Address: DeepPartial<Address>;
+  String: DeepPartial<Scalars['String']['output']>;
   Query: {};
-  ID: Scalars['ID']['output'];
-  User: User;
-  String: Scalars['String']['output'];
-  Boolean: Scalars['Boolean']['output'];
+  ID: DeepPartial<Scalars['ID']['output']>;
+  User: DeepPartial<User>;
+  Boolean: DeepPartial<Scalars['Boolean']['output']>;
+}>;
+
+export type AddressResolvers<ContextType = DataSourceContext, ParentType extends ResolversParentTypes['Address'] = ResolversParentTypes['Address']> = ResolversObject<{
+  city?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  country?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  postCode?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  state?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  streetAddress1?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  streetAddress2?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
 export type QueryResolvers<ContextType = DataSourceContext, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = ResolversObject<{
@@ -142,6 +167,8 @@ export type QueryResolvers<ContextType = DataSourceContext, ParentType extends R
 
 export type UserResolvers<ContextType = DataSourceContext, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = ResolversObject<{
   __resolveReference?: ReferenceResolver<Maybe<ResolversTypes['User']>, { __typename: 'User' } & GraphQLRecursivePick<ParentType, {"id":true}>, ContextType>;
+  address?: Resolver<ResolversTypes['Address'], ParentType, ContextType>;
+  bio?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   email?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
@@ -149,6 +176,7 @@ export type UserResolvers<ContextType = DataSourceContext, ParentType extends Re
 }>;
 
 export type Resolvers<ContextType = DataSourceContext> = ResolversObject<{
+  Address?: AddressResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
   User?: UserResolvers<ContextType>;
 }>;

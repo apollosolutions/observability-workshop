@@ -21,32 +21,37 @@ telemetry:
     prometheus:
       enabled: true
       path: /metrics
-      listen: 0.0.0.0:9090
+      listen: 0.0.0.0:9999
     common:
-      buckets: [
-          0.001,
-          0.005,
-          0.015,
-          0.05,
-          0.1,
-          0.2,
-          0.3,
-          0.4,
-          0.5,
-          1.0,
-          5.0,
-          10.0,
-        ] # workaround until 1.25.0 launches
+      service_name: router
+      service_namespace: graphql-summit
+      attributes:
+        supergraph:
+          context:
+            - named: has_errors
+        subgraph:
+          all:
+            errors:
+              include_messages: true
+              extensions:
+                - name: error_code
+                  path: .code
   tracing:
     propagation:
       zipkin: true
     trace_config:
       parent_based_sampler: true
       service_name: router
-      service_namespace: apollo
+      service_namespace: graphql-summit
       sampler: always_on
       attributes:
         environment: ${env.ENVIRONMENT:-development}
     otlp:
-      endpoint: collector:4317
+      endpoint: localhost:4317
       protocol: grpc
+include_subgraph_errors:
+  all: true
+rhai: {}
+
+plugins:
+  experimental.expose_query_plan: true

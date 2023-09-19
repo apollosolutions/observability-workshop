@@ -8,10 +8,15 @@ import {
   PostRequestQuery,
 } from "./util";
 import { FAKE_POST, FAKE_POSTS } from "./posts";
-import { FAKE_USER, FAKE_USERS } from "./users";
+import {
+  FAKE_USER,
+  FAKE_USERS,
+  UserAddress,
+  UserAddressRestResponse,
+} from "./users";
 import { find } from "lodash";
 
-const PORT = 3000 || process.env["PORT"];
+const PORT = 3030;
 const app = express();
 
 app.use(express.json());
@@ -41,6 +46,46 @@ app.get(
         continue;
       }
       users.push(u);
+    }
+
+    res.json({ data: users });
+  }
+);
+
+app.get(
+  "/user/address",
+  async (
+    req: Request<RequestParams, ResponseBody, RequestBody, UserRequestQuery>,
+    res: Response
+  ) => {
+    await sleep(1000);
+    let params: string[] = [];
+    if (!req.query.id) {
+      res.sendStatus(400);
+      return;
+    }
+    if (typeof req.query.id === "string") {
+      params.push(req.query.id);
+    } else {
+      params = req.query.id;
+    }
+
+    let users: UserAddressRestResponse[] = [];
+    for (let user of params) {
+      let u = find(FAKE_USERS, { id: parseInt(user) });
+      if (!u) {
+        continue;
+      }
+      users.push({
+        user_id: u.id,
+        streetAddress1: u.streetAddress1,
+        streetAddress2: u.streetAddress2,
+        state: u.state,
+        country: u.country,
+        postCode: u.postCode,
+        city: u.city,
+        fullCountry: u.fullCountry,
+      });
     }
 
     res.json({ data: users });

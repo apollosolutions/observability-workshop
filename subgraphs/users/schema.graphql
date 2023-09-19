@@ -1,20 +1,5 @@
 extend schema
-  @link(
-    url: "https://specs.apollo.dev/federation/v2.3"
-    import: [
-      "@key"
-      "@extends"
-      "@shareable"
-      "@inaccessible"
-      "@override"
-      "@external"
-      "@provides"
-      "@requires"
-      "@tag"
-      "@composeDirective"
-      "@interfaceObject"
-    ]
-  )
+  @link(url: "https://specs.apollo.dev/federation/v2.3", import: ["@key"])
 
 type Query {
   user(id: ID!): User
@@ -25,11 +10,15 @@ type User @key(fields: "id") {
   id: ID!
   name: String!
   email: String!
-  posts: [Post!]! @external
-  bio: String! @requires(fields: "posts { content }")
+  bio: String!
+  address: Address!
 }
 
-type Post @key(fields: "id") {
-  id: ID!
-  content: String! @external
+type Address {
+  streetAddress1: String!
+  streetAddress2: String
+  city: String!
+  state: String!
+  postCode: String!
+  country: String!
 }
