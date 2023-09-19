@@ -7,10 +7,7 @@ export const User: Resolvers = {
       return { id: parent.id };
     },
     posts: async ({ id }, _, { postsAPI }) => {
-      for (let i = 1; i <= Math.floor(Math.random() * 10) + 1; i++) {
-        await sleep(35);
-      }
-      return await postsAPI.getPostsByAuthorId([id]);
+      return await postsAPI.getPostsByAuthorIdV2(id);
     },
   },
 };

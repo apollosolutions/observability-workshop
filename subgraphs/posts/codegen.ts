@@ -7,10 +7,14 @@ const config: CodegenConfig = {
       config: {
         federation: true,
         useIndexSignature: true,
-        contextType: '../types/DataSourceContext#DataSourceContext',
-        defaultMapper: "Partial<{T}>"
+        contextType: "../types/DataSourceContext#DataSourceContext",
+        defaultMapper: "DeepPartial<{T}>",
       },
-      plugins: ["typescript", "typescript-resolvers"]
+      plugins: [
+        "typescript",
+        "typescript-resolvers",
+        { add: { content: "import { DeepPartial } from 'utility-types';" } },
+      ],
     },
   },
 };

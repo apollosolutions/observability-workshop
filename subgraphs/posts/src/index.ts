@@ -12,6 +12,7 @@ import { DataSourceContext } from "./types/DataSourceContext";
 import { PostsAPI } from "./datasource";
 
 const port = process.env.PORT ?? "4002";
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const subgraphName = require("../package.json").name;
 
 const context: ContextFunction<
@@ -24,7 +25,7 @@ const context: ContextFunction<
 };
 
 async function main() {
-  let typeDefs = gql(
+  const typeDefs = gql(
     readFileSync("schema.graphql", {
       encoding: "utf-8",
     })

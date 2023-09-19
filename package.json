@@ -1,0 +1,23 @@
+{
+  "name": "subgraphs",
+  "workspaces": [
+    "subgraphs/*",
+    "datasource"
+  ],
+  "scripts": {
+    "dev": "npm-run-all --parallel dev:router dev:docker dev:posts dev:users dev:datasource",
+    "loadtest": "docker run --rm -i grafana/k6 run -e K6_PROMETHEUS_RW_TREND_AS_NATIVE_HISTOGRAM=true -e K6_PROMETHEUS_RW_SERVER_URL=http://host.docker.internal:9000/api/v1/write -o experimental-prometheus-rw  - <k6/script.js",
+    "dev:docker": "docker compose up -d",
+    "dev:router": "source .env && ./router --config router.yaml --hr",
+    "dev:posts": "npm run dev -w subgraphs/posts",
+    "dev:users": "npm run dev -w subgraphs/users",
+    "dev:datasource": "npm run dev -w datasource",
+    "postinstall": "node -e \"console.log('Install the router using any of the commands listed here: https://www.apollographql.com/docs/router/quickstart/#1-download-and-extract-the-apollo-router-binary')\""
+  },
+  "devDependencies": {
+    "npm-run-all": "^4.1.5"
+  },
+  "dependencies": {
+    "dataloader": "^2.2.2"
+  }
+}
