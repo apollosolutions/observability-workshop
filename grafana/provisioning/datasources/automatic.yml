@@ -1,10 +1,11 @@
 apiVersion: 1
 
 datasources:
-  - name: Prometheus
+  - name: prometheus
     type: prometheus
+    uid: e4ea1e5e-7c5d-4935-81b8-e12c91a6cb83
     access: proxy
-    url: http://localhost:9999/
+    url: http://localhost:9000/
     isDefault: true
     jsonData:
       httpMethod: POST
@@ -12,3 +13,4 @@ datasources:
       prometheusVersion: 2.40.1
       tlsSkipVerify: true
     readOnly: false
+    editable: true

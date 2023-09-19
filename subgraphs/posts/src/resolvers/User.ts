@@ -1,4 +1,3 @@
-import { sleep } from "../util";
 import { Resolvers } from "../__generated__/resolvers-types";
 
 export const User: Resolvers = {
@@ -7,7 +6,7 @@ export const User: Resolvers = {
       return { id: parent.id };
     },
     posts: async ({ id }, _, { postsAPI }) => {
-      return await postsAPI.getPostsByAuthorIdV2(id);
+      return await postsAPI.getPostsByAuthorId(id);
     },
   },
 };

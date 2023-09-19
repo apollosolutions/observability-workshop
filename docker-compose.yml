@@ -14,6 +14,7 @@ services:
     user: "0"
     volumes:
       - "./grafana/data:/var/lib/grafana"
+      - "./grafana/provisioning:/etc/grafana/provisioning"
   otel-collector:
     network_mode: host
     container_name: collector

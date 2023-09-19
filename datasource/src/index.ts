@@ -7,14 +7,10 @@ import {
   sleep,
   PostRequestQuery,
 } from "./util";
-import { FAKE_POST, FAKE_POSTS } from "./posts";
-import {
-  FAKE_USER,
-  FAKE_USERS,
-  UserAddress,
-  UserAddressRestResponse,
-} from "./users";
+import { FAKE_POST } from "./posts";
+import { FAKE_USER, UserAddressRestResponse } from "./users";
 import { find } from "lodash";
+import { FAKE_POSTS, FAKE_USERS } from "./mocked_data";
 
 const PORT = 3030;
 const app = express();

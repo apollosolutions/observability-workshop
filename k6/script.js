@@ -33,8 +33,7 @@ export default function () {
     check(resp, {
         "response code was 200": (res) => res.status === 200,
         "did not contain any errors": (res) => {
-            let body = JSON.parse(res.body)
-            return !!body.errors
+            return !res.json().errors
         }
     })
     sleep(1);

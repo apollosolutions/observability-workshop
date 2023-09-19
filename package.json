@@ -11,8 +11,7 @@
     "dev:router": "source .env && ./router --config router.yaml --hr",
     "dev:posts": "npm run dev -w subgraphs/posts",
     "dev:users": "npm run dev -w subgraphs/users",
-    "dev:datasource": "npm run dev -w datasource",
-    "postinstall": "node -e \"console.log('Install the router using any of the commands listed here: https://www.apollographql.com/docs/router/quickstart/#1-download-and-extract-the-apollo-router-binary')\""
+    "dev:datasource": "npm run dev -w datasource"
   },
   "devDependencies": {
     "npm-run-all": "^4.1.5"
