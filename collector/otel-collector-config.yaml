@@ -19,7 +19,7 @@ exporters:
   prometheus:
     endpoint: "0.0.0.0:9464"
   otlp:
-    endpoint: localhost:4310
+    endpoint: jaeger:4310
     tls:
       insecure: true
 extensions:
