@@ -8,4 +8,4 @@ scrape_configs:
       - targets: ["host.docker.internal:9999"]
   - job_name: router_metrics
     static_configs:
-      - targets: ["0.0.0.0:9464"]
+      - targets: ["collector:9464"]

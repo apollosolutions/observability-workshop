@@ -22,12 +22,19 @@ To be able to run the workshop, you will need:
 - [Rover](https://www.apollographql.com/docs/rover/getting-started) to publish the provided schema
 - The provided Apollo Studio Graph ID and access to the associated Apollo Studio instance
 
-Once you have the above installed, you can run the `setup.sh` script included to fetch the additional dependencies. If you'd like to install those manually, you will need to:
+Once you have the above installed, you can run the `setup.sh` script included to fetch the additional dependencies.
+
+<details>
+<summary>What if I want to install them manually?</summary>
+
+If you'd like to install those manually, you will need to:
 
 - Run `docker compose pull` to pull the associated Docker images
 - Run `docker pull grafana/k6:0.46.0` to fetch the required [k6 Docker image](https://k6.io) for load testing
 - Run `npm install` from the root of the folder to download all required dependencies
 - Download the Apollo Router, as noted [on the Apollo Router documentation](https://www.apollographql.com/docs/router/quickstart/)
+
+</details>
 
 ## Getting oriented
 
@@ -51,15 +58,20 @@ And for the observability tooling:
 
 ## Running the stack
 
-Before running, there's one final step you'll need to take. You'll need to populate the `.env.sample` with an Apollo key and graphref as noted during the presentation. Once you've filled it out, rename it to just `.env`.
+Before running, there's one final step you'll need to take. You'll need to populate the `.env.sample` with an Apollo key and graphref as noted during the presentation. Once you've filled it out, rename it to just `.env`. Once you've done this, you'll need to then run `publish.sh` to publish the schema to Apollo Studio.
 
-To run the stack, you will need to run `npm run dev` from the root of this folder after running `setup.sh` (or as noted above in the [Prerequisites](#prerequisites)). This will do a few things:
+To run the stack, you will need to run `npm run dev` from the root of this folder after running `setup.sh` and `publish.sh` (or as noted above in the [Prerequisites](#prerequisites)).
+
+<details>
+<summary>What does the script do?</summary>
 
 - Run `docker compose up -d` to start the observability tooling applications using Docker compose
 - Start the router with a config and the associated environment variables
 - Start the subgraphs using those subgraphs' `npm run dev` commands
 
 Using the singular command is preferable since it will run these all in parallel for you.
+
+</details>
 
 ## Tasks
 
