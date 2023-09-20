@@ -9,7 +9,7 @@ import {
 } from "./util";
 import { FAKE_POST } from "./posts";
 import { FAKE_USER, UserAddressRestResponse } from "./users";
-import { find } from "lodash";
+import { find, omit } from "lodash";
 import { FAKE_POSTS, FAKE_USERS } from "./mocked_data";
 
 const PORT = 3030;
@@ -41,7 +41,8 @@ app.get(
       if (!u) {
         continue;
       }
-      users.push(u);
+
+      users.push(omit(u, "address"));
     }
 
     res.json({ data: users });
@@ -74,13 +75,7 @@ app.get(
       }
       users.push({
         user_id: u.id,
-        streetAddress1: u.streetAddress1,
-        streetAddress2: u.streetAddress2,
-        state: u.state,
-        country: u.country,
-        postCode: u.postCode,
-        city: u.city,
-        fullCountry: u.fullCountry,
+        ...u.address,
       });
     }
 

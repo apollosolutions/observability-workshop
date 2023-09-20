@@ -14,30 +14,26 @@ processors:
     metrics_exporter: prometheus
 
 exporters:
-  zipkin:
-    endpoint: http://localhost:9411/api/v2/spans
-    tls:
-      insecure: true
   logging:
+    verbosity: detailed
   prometheus:
     endpoint: "0.0.0.0:9464"
+  otlp:
+    endpoint: localhost:4310
+    tls:
+      insecure: true
 extensions:
   health_check:
-  pprof:
   zpages:
 
 service:
-  extensions: [health_check, pprof, zpages]
+  extensions: [health_check, zpages]
   pipelines:
     traces:
       receivers: [otlp]
       processors: [batch, spanmetrics]
-      exporters: [zipkin, logging]
+      exporters: [otlp]
     metrics:
       receivers: [otlp/spanmetrics, otlp]
       processors: [batch]
-      exporters: [prometheus, logging]
-    # logs:
-    #   receivers: [otlp]
-    #   processors: [batch]
-    #   exporters: [otlp]
+      exporters: [prometheus]

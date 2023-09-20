@@ -5,7 +5,8 @@ export type FAKE_USER = {
   email: string;
   name: string;
   bio: string;
-} & UserAddress;
+  address?: UserAddress;
+};
 export type UserAddress = {
   streetAddress1: string;
   streetAddress2: string;

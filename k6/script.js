@@ -4,10 +4,10 @@ export const options = {
     scenarios: {
         loadtest: {
             executor: 'constant-arrival-rate',
-            rate: 20,
+            rate: 25,
             timeUnit: '1s',
             duration: '30s',
-            preAllocatedVUs: 20,
+            preAllocatedVUs: 30,
         }
     }
 };
