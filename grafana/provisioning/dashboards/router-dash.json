@@ -24,7 +24,6 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 2,
-  "id": 3,
   "links": [],
   "liveNow": false,
   "panels": [
@@ -363,7 +362,7 @@
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "sum(rate({__name__=\"apollo_router_http_request_duration_seconds_count\", error=~\".+\", subgraph=\"\"}[$__rate_interval]))",
+          "expr": "sum(rate({__name__=\"apollo_router_http_request_duration_seconds_count\", has_errors=\"true\", subgraph=\"\"}[$__rate_interval]))",
           "hide": false,
           "instant": false,
           "interval": "",
@@ -377,7 +376,7 @@
             "uid": "e4ea1e5e-7c5d-4935-81b8-e12c91a6cb83"
           },
           "editorMode": "code",
-          "expr": "sum(rate({__name__=\"apollo_router_http_request_duration_seconds_count\", error=\"\", subgraph=\"\"}[$__rate_interval]))",
+          "expr": "sum(rate({__name__=\"apollo_router_http_request_duration_seconds_count\", has_errors=\"false\", subgraph=\"\"}[$__rate_interval]))",
           "hide": false,
           "legendFormat": "Success",
           "range": true,
@@ -1227,9 +1226,9 @@
       {
         "allValue": "",
         "current": {
-          "selected": false,
-          "text": "All",
-          "value": "$__all"
+          "selected": true,
+          "text": ["All"],
+          "value": ["$__all"]
         },
         "datasource": {
           "type": "prometheus",
@@ -1255,7 +1254,7 @@
       {
         "current": {
           "selected": false,
-          "text": "Prometheus",
+          "text": "prometheus",
           "value": "e4ea1e5e-7c5d-4935-81b8-e12c91a6cb83"
         },
         "hide": 2,
@@ -1272,7 +1271,7 @@
     ]
   },
   "time": {
-    "from": "now-15m",
+    "from": "now-30m",
     "to": "now"
   },
   "timepicker": {
@@ -1281,6 +1280,6 @@
   "timezone": "",
   "title": "Sample Router Dashboard for Prometheus",
   "uid": "kw3gsro4z",
-  "version": 7,
+  "version": 1,
   "weekStart": ""
 }

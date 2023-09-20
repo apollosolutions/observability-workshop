@@ -24,7 +24,6 @@ const sdk = new NodeSDK({
   traceExporter: new OTLPTraceExporter(collectorOptions),
   metricReader: new PeriodicExportingMetricReader({
     exporter: new OTLPMetricExporter(collectorOptions),
-    exportIntervalMillis: 500,
   }),
 });
 
