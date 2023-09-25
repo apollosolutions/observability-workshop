@@ -6,9 +6,11 @@
   ],
   "scripts": {
     "dev": "npm-run-all --parallel dev:router dev:docker dev:posts dev:users dev:datasource",
+    "dev:windows": "npm-run-all --parallel dev:docker dev:posts dev:users dev:datasource dev:router:windows",
     "loadtest": "docker run --rm -i grafana/k6 run -e K6_PROMETHEUS_RW_TREND_AS_NATIVE_HISTOGRAM=true -e K6_PROMETHEUS_RW_SERVER_URL=http://host.docker.internal:9000/api/v1/write -o experimental-prometheus-rw  - <k6/script.js",
     "dev:docker": "docker compose up -d",
-    "dev:router": "source .env && ./router --config router.yaml --hr",
+    "dev:router": "./router.sh",
+    "dev:router:windows": "powershell.exe -ExecutionPolicy Bypass -Command router.ps1",
     "dev:posts": "npm run dev -w subgraphs/posts",
     "dev:users": "npm run dev -w subgraphs/users",
     "dev:datasource": "npm run dev -w datasource"

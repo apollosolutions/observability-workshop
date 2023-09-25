@@ -2,8 +2,12 @@
 
 - [GraphQL Summit Observability Workshop](#graphql-summit-observability-workshop)
   - [Prerequisites](#prerequisites)
+    - [MacOS \& Linux (incl. WSL)](#macos--linux-incl-wsl)
+    - [Windows](#windows)
   - [Getting oriented](#getting-oriented)
   - [Running the stack](#running-the-stack)
+    - [MacOS \& Linux (incl. WSL)](#macos--linux-incl-wsl-1)
+    - [Windows](#windows-1)
   - [Tasks](#tasks)
     - [Important](#important)
     - [Issues](#issues)
@@ -22,7 +26,9 @@ To be able to run the workshop, you will need:
 - [Rover](https://www.apollographql.com/docs/rover/getting-started) to publish the provided schema
 - The provided Apollo Studio Graph ID and access to the associated Apollo Studio instance
 
-Once you have the above installed, you can run the `setup.sh` script included to fetch the additional dependencies.
+### MacOS & Linux (incl. WSL)
+
+Once you have the prerequisites installed, you can run the `setup.sh` script included to fetch the additional dependencies.
 
 <details>
 <summary>What if I want to install them manually?</summary>
@@ -33,6 +39,22 @@ If you'd like to install those manually, you will need to:
 - Run `docker pull grafana/k6:0.46.0` to fetch the required [k6 Docker image](https://k6.io) for load testing
 - Run `npm install` from the root of the folder to download all required dependencies
 - Download the Apollo Router, as noted [on the Apollo Router documentation](https://www.apollographql.com/docs/router/quickstart/)
+
+</details>
+
+### Windows
+
+Once you have the prerequisites installed, you can run the `setup.ps1` script included to fetch the additional dependencies.
+
+<details>
+<summary>What if I want to install them manually?</summary>
+
+If you'd like to install those manually, you will need to:
+
+- Run `docker compose pull` to pull the associated Docker images
+- Run `docker pull grafana/k6:0.46.0` to fetch the required [k6 Docker image](https://k6.io) for load testing
+- Run `npm install` from the root of the folder to download all required dependencies
+- Download the Apollo Router using Powershell and extract using `tar`
 
 </details>
 
@@ -60,13 +82,30 @@ And for the observability tooling:
 
 Before running, there's one final step you'll need to take. You'll need to populate the `.env.sample` with an Apollo key and graphref as noted during the presentation. Once you've filled it out, rename it to just `.env`. Once you've done this, you'll need to then run `publish.sh` to publish the schema to Apollo Studio.
 
+### MacOS & Linux (incl. WSL)
+
 To run the stack, you will need to run `npm run dev` from the root of this folder after running `setup.sh` and `publish.sh` (or as noted above in the [Prerequisites](#prerequisites)).
 
 <details>
 <summary>What does the script do?</summary>
 
-- Run `docker compose up -d` to start the observability tooling applications using Docker compose
+- Run `docker compose up -d` to start the observability tooling applications using `docker compose`
 - Start the router with a config and the associated environment variables
+- Start the subgraphs using those subgraphs' `npm run dev` commands
+
+Using the singular command is preferable since it will run these all in parallel for you.
+
+</details>
+
+### Windows
+
+If running on Windows, you will need to run `npm run dev:windows` after running `setup.sh` and `publish.sh` (or as noted above in the [Prerequisites](#prerequisites)).
+
+<details>
+<summary>What does the script do?</summary>
+
+- Run `docker compose up -d` to start the observability tooling applications using `docker compose`
+- Start the router with a config and the associated environment variables when on Windows
 - Start the subgraphs using those subgraphs' `npm run dev` commands
 
 Using the singular command is preferable since it will run these all in parallel for you.
@@ -85,7 +124,7 @@ With that said, you can (and should!) look through the code to see if you can fi
 
 We've included a number of issues within the code, and while you're likely to find a number of them, we want to outline a few here that you can look for if you're looking for a place to start.
 
-**Please note that the resolution may not be something you can do today- just identifying the issue is often sufficient so that another team can actually address.**
+**Please note that the resolution may not be something you can do today- just identifying the issue is often sufficient so that another development team can eventually address.**
 
 - One of the fields is causing an error, and we aren't sure which.
 - The team managing the backing REST API is noting that they are seeing too much traffic, and would like us to optimize the number of requests from both subgraphs
@@ -98,11 +137,11 @@ There are a few other areas to investigate to improve, but these are just a few 
 
 As mentioned above, this workshop consists of debugging and resolving issues within a poorly performing federated graph. When trying to resolve these issues, you can debug using this flow:
 
-- Open up [Grafana (hosted on http://localhost:3000/)](http://localhost:3000) (default credentials are admin/admin) and [Jaeger (on http://localhost:16686)](http://localhost:16686) to see the current metrics and traces of the application
+- Open up [Grafana (hosted on http://localhost:3000/)](http://localhost:3000) (default username/password are admin/admin) and [Jaeger (on http://localhost:16686)](http://localhost:16686) to see the current metrics and traces of the application
 - Use k6 to simulate load via running `npm run loadtest` in another console window to run a short (30 second) load test. If you'd prefer a longer test, feel free to modify [`k6/script.js`](/k6/script.js)'s `duration`
 - Review Grafana, Jaeger, and the k6 results to identify problems
-  - Grafana includes two prepopulated dashboards; one for k6 results, which include HTTP response times and test results (e.g. percent errors on responses) and throughput, and another for some basic metrics for the router, such as error rates per operation, subgraph response times, and the like
-  - Traces can be helpful in determining where time is being spent the most in a given request, so reviewing traces can help provide concrete action items to do
+  - Grafana includes two prepopulated dashboards; one for k6 results, which include HTTP response times, test results (e.g. percent errors on responses), and throughput, and another for some basic metrics for the router, such as error rates per operation, subgraph response times, and the like
+  - Traces can be helpful in determining where time is being spent the most in a given request, so reviewing traces can help provide concrete action items
 - Utilize Apollo Studio for further debugging using the Operations tab to better visualize the error rates and per-field execution times to see if there's a specific field slowing the entire operation
 
-Once you've reviewed and identified items, adjust and re-test.
+Once you've reviewed and identified items, adjust and re-test. Note which tasks you've addressed and how you identified them for use later.
