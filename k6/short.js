@@ -27,6 +27,8 @@ export default function () {
     const params = {
         headers: {
             'Content-Type': 'application/json',
+            'apollographql-client-name': 'k6',
+            'apollographql-client-version': 'loadtest'
         },
     };
     let resp = http.post('http://host.docker.internal:4000/', payload, params);

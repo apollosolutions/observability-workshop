@@ -1,6 +1,6 @@
 #!/bin/bash
 set -e
-curl -sSL https://router.apollo.dev/download/nix/v1.30.1 | sh # install router
+curl -sSL https://router.apollo.dev/download/nix/v1.32.0 | sh # install router
 npm install # dependencies for subgraphs/datasource
 docker compose pull
 docker pull grafana/k6:0.46.0

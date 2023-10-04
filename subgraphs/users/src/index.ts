@@ -10,6 +10,7 @@ import {
 import resolvers from "./resolvers";
 import { DataSourceContext } from "./types/DataSourceContext";
 import { UsersAPI } from "./datasource";
+import { ApolloServerPluginInlineTrace } from "@apollo/server/plugin/inlineTrace";
 
 const port = process.env.PORT ?? "4001";
 const subgraphName = require("../package.json").name;
@@ -22,6 +23,13 @@ async function main() {
   );
   const server = new ApolloServer({
     schema: buildSubgraphSchema({ typeDefs, resolvers }),
+    plugins: [
+      ApolloServerPluginInlineTrace({
+        includeErrors: {
+          unmodified: true,
+        },
+      }),
+    ],
   });
   const context: ContextFunction<
     [StandaloneServerContextFunctionArgument],
