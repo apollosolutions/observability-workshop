@@ -79,6 +79,12 @@
                     "urls"
                   ],
                   "properties": {
+                    "timeout": {
+                      "description": "Redis request timeout (default: 2ms)",
+                      "default": null,
+                      "type": "string",
+                      "nullable": true
+                    },
                     "urls": {
                       "description": "List of URLs to the Redis cluster",
                       "type": "array",
@@ -774,6 +780,106 @@
             }
           },
           "additionalProperties": false
+        },
+        "supergraph": {
+          "description": "The supergraph stage request/response configuration",
+          "default": {
+            "request": {
+              "headers": false,
+              "context": false,
+              "body": false,
+              "sdl": false,
+              "method": false
+            },
+            "response": {
+              "headers": false,
+              "context": false,
+              "body": false,
+              "sdl": false,
+              "status_code": false
+            }
+          },
+          "type": "object",
+          "properties": {
+            "request": {
+              "description": "The request configuration",
+              "default": {
+                "headers": false,
+                "context": false,
+                "body": false,
+                "sdl": false,
+                "method": false
+              },
+              "type": "object",
+              "properties": {
+                "body": {
+                  "description": "Send the body",
+                  "default": false,
+                  "type": "boolean"
+                },
+                "context": {
+                  "description": "Send the context",
+                  "default": false,
+                  "type": "boolean"
+                },
+                "headers": {
+                  "description": "Send the headers",
+                  "default": false,
+                  "type": "boolean"
+                },
+                "method": {
+                  "description": "Send the method",
+                  "default": false,
+                  "type": "boolean"
+                },
+                "sdl": {
+                  "description": "Send the SDL",
+                  "default": false,
+                  "type": "boolean"
+                }
+              },
+              "additionalProperties": false
+            },
+            "response": {
+              "description": "What information is passed to a router request/response stage",
+              "default": {
+                "headers": false,
+                "context": false,
+                "body": false,
+                "sdl": false,
+                "status_code": false
+              },
+              "type": "object",
+              "properties": {
+                "body": {
+                  "description": "Send the body",
+                  "default": false,
+                  "type": "boolean"
+                },
+                "context": {
+                  "description": "Send the context",
+                  "default": false,
+                  "type": "boolean"
+                },
+                "headers": {
+                  "description": "Send the headers",
+                  "default": false,
+                  "type": "boolean"
+                },
+                "sdl": {
+                  "description": "Send the SDL",
+                  "default": false,
+                  "type": "boolean"
+                },
+                "status_code": {
+                  "description": "Send the HTTP status",
+                  "default": false,
+                  "type": "boolean"
+                }
+              },
+              "additionalProperties": false
+            }
+          }
         },
         "timeout": {
           "description": "The timeout for external requests",
@@ -1771,7 +1877,7 @@
             },
             "redis": null
           },
-          "warmed_up_queries": 0
+          "warmed_up_queries": null
         }
       },
       "type": "object",
@@ -1820,7 +1926,7 @@
               },
               "redis": null
             },
-            "warmed_up_queries": 0
+            "warmed_up_queries": null
           },
           "type": "object",
           "properties": {
@@ -1861,6 +1967,12 @@
                     "urls"
                   ],
                   "properties": {
+                    "timeout": {
+                      "description": "Redis request timeout (default: 2ms)",
+                      "default": null,
+                      "type": "string",
+                      "nullable": true
+                    },
                     "urls": {
                       "description": "List of URLs to the Redis cluster",
                       "type": "array",
@@ -1877,11 +1989,12 @@
               "additionalProperties": false
             },
             "warmed_up_queries": {
-              "description": "Warm up the cache on reloads by running the query plan over a list of the most used queries Defaults to 0 (do not warm up the cache)",
-              "default": 0,
+              "description": "Warms up the cache on reloads by running the query plan over a list of the most used queries (from the in memory cache) Configures the number of queries warmed up. Defaults to 1/3 of the in memory cache",
+              "default": null,
               "type": "integer",
               "format": "uint",
-              "minimum": 0.0
+              "minimum": 0.0,
+              "nullable": true
             }
           },
           "additionalProperties": false
@@ -4963,6 +5076,11 @@
               "description": "Propagation configuration",
               "type": "object",
               "properties": {
+                "awsxray": {
+                  "description": "Propagate AWS X-Ray",
+                  "default": false,
+                  "type": "boolean"
+                },
                 "baggage": {
                   "description": "Propagate baggage https://www.w3.org/TR/baggage/",
                   "default": false,
@@ -5236,7 +5354,8 @@
         "supergraph": null,
         "subgraph": {
           "all": {
-            "certificate_authorities": null
+            "certificate_authorities": null,
+            "client_authentication": null
           },
           "subgraphs": {}
         }
@@ -5247,7 +5366,8 @@
           "description": "Configuration options pertaining to the subgraph server component.",
           "default": {
             "all": {
-              "certificate_authorities": null
+              "certificate_authorities": null,
+              "client_authentication": null
             },
             "subgraphs": {}
           },
@@ -5256,7 +5376,8 @@
             "all": {
               "description": "options applying to all subgraphs",
               "default": {
-                "certificate_authorities": null
+                "certificate_authorities": null,
+                "client_authentication": null
               },
               "type": "object",
               "properties": {
@@ -5264,6 +5385,29 @@
                   "description": "list of certificate authorities in PEM format",
                   "default": null,
                   "type": "string",
+                  "nullable": true
+                },
+                "client_authentication": {
+                  "description": "client certificate authentication",
+                  "default": null,
+                  "type": "object",
+                  "required": [
+                    "certificate_chain",
+                    "key"
+                  ],
+                  "properties": {
+                    "certificate_chain": {
+                      "description": "list of certificates in PEM format",
+                      "writeOnly": true,
+                      "type": "string"
+                    },
+                    "key": {
+                      "description": "key in PEM format",
+                      "writeOnly": true,
+                      "type": "string"
+                    }
+                  },
+                  "additionalProperties": false,
                   "nullable": true
                 }
               },
@@ -5281,6 +5425,29 @@
                     "description": "list of certificate authorities in PEM format",
                     "default": null,
                     "type": "string",
+                    "nullable": true
+                  },
+                  "client_authentication": {
+                    "description": "client certificate authentication",
+                    "default": null,
+                    "type": "object",
+                    "required": [
+                      "certificate_chain",
+                      "key"
+                    ],
+                    "properties": {
+                      "certificate_chain": {
+                        "description": "list of certificates in PEM format",
+                        "writeOnly": true,
+                        "type": "string"
+                      },
+                      "key": {
+                        "description": "key in PEM format",
+                        "writeOnly": true,
+                        "type": "string"
+                      }
+                    },
+                    "additionalProperties": false,
                     "nullable": true
                   }
                 },
@@ -5361,11 +5528,6 @@
               "type": "boolean",
               "nullable": true
             },
-            "experimental_enable_http2": {
-              "description": "Enable HTTP2 for subgraphs",
-              "type": "boolean",
-              "nullable": true
-            },
             "experimental_entity_caching": {
               "description": "Enable entity caching",
               "type": "object",
@@ -5379,6 +5541,33 @@
                 }
               },
               "additionalProperties": false,
+              "nullable": true
+            },
+            "experimental_http2": {
+              "description": "Enable HTTP2 for subgraphs",
+              "oneOf": [
+                {
+                  "description": "Enable HTTP2 for subgraphs",
+                  "type": "string",
+                  "enum": [
+                    "enable"
+                  ]
+                },
+                {
+                  "description": "Disable HTTP2 for subgraphs",
+                  "type": "string",
+                  "enum": [
+                    "disable"
+                  ]
+                },
+                {
+                  "description": "Only HTTP2 is active",
+                  "type": "string",
+                  "enum": [
+                    "http2only"
+                  ]
+                }
+              ],
               "nullable": true
             },
             "experimental_retry": {
@@ -5457,6 +5646,12 @@
             "urls"
           ],
           "properties": {
+            "timeout": {
+              "description": "Redis request timeout (default: 2ms)",
+              "default": null,
+              "type": "string",
+              "nullable": true
+            },
             "urls": {
               "description": "List of URLs to the Redis cluster",
               "type": "array",
@@ -5543,11 +5738,6 @@
                 "type": "boolean",
                 "nullable": true
               },
-              "experimental_enable_http2": {
-                "description": "Enable HTTP2 for subgraphs",
-                "type": "boolean",
-                "nullable": true
-              },
               "experimental_entity_caching": {
                 "description": "Enable entity caching",
                 "type": "object",
@@ -5561,6 +5751,33 @@
                   }
                 },
                 "additionalProperties": false,
+                "nullable": true
+              },
+              "experimental_http2": {
+                "description": "Enable HTTP2 for subgraphs",
+                "oneOf": [
+                  {
+                    "description": "Enable HTTP2 for subgraphs",
+                    "type": "string",
+                    "enum": [
+                      "enable"
+                    ]
+                  },
+                  {
+                    "description": "Disable HTTP2 for subgraphs",
+                    "type": "string",
+                    "enum": [
+                      "disable"
+                    ]
+                  },
+                  {
+                    "description": "Only HTTP2 is active",
+                    "type": "string",
+                    "enum": [
+                      "http2only"
+                    ]
+                  }
+                ],
                 "nullable": true
               },
               "experimental_retry": {

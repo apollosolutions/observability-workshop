@@ -99,7 +99,7 @@ Using the singular command is preferable since it will run these all in parallel
 
 ### Windows
 
-If running on Windows, you will need to run `npm run dev:windows` after running `setup.sh` and `publish.sh` (or as noted above in the [Prerequisites](#prerequisites)).
+If running on Windows natively (meaning not through WSL), you will need to run `npm run dev:windows` after running `setup.sh` and `publish.sh` (or as noted above in the [Prerequisites](#prerequisites)).
 
 <details>
 <summary>What does the script do?</summary>
@@ -131,7 +131,7 @@ We've included a number of issues within the code, and while you're likely to fi
   - _There are two places where you can optimize for this_
 - The `User` type takes a long time to resolve and the team isn't sure why.
 
-There are a few other areas to investigate to improve, but these are just a few start points. Note what you've done and we'll discuss towards the end of the workshop.
+There are a few other areas to investigate to improve, but these are just a few start points. Note what you've done and we'll discuss the listed three during the specific section.
 
 ### What should I do?
 
@@ -140,7 +140,7 @@ As mentioned above, this workshop consists of debugging and resolving issues wit
 - Open up [Grafana (hosted on http://localhost:3000/)](http://localhost:3000) (default username/password are admin/admin) and [Jaeger (on http://localhost:16686)](http://localhost:16686) to see the current metrics and traces of the application
 - Use k6 to simulate load via running `npm run loadtest` in another console window to run a short (30 second) load test. If you'd prefer a longer test, feel free to modify [`k6/script.js`](/k6/script.js)'s `duration`
 - Review Grafana, Jaeger, and the k6 results to identify problems
-  - Grafana includes two prepopulated dashboards; one for k6 results, which include HTTP response times, test results (e.g. percent errors on responses), and throughput, and another for some basic metrics for the router, such as error rates per operation, subgraph response times, and the like
+  - Grafana includes two prepopulated dashboards; one for `k6` results, which include HTTP response times, test results (e.g. percent errors on responses), and throughput, and another for some basic metrics for the router, such as error rates per operation, subgraph response times, and the like
   - Traces can be helpful in determining where time is being spent the most in a given request, so reviewing traces can help provide concrete action items
 - Utilize Apollo Studio for further debugging using the Operations tab to better visualize the error rates and per-field execution times to see if there's a specific field slowing the entire operation
 

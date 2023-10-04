@@ -10,6 +10,7 @@ import {
 import resolvers from "./resolvers";
 import { DataSourceContext } from "./types/DataSourceContext";
 import { PostsAPI } from "./datasource";
+import { ApolloServerPluginInlineTrace } from "@apollo/server/plugin/inlineTrace";
 
 const port = process.env.PORT ?? "4002";
 // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -32,6 +33,13 @@ async function main() {
   );
   const server = new ApolloServer({
     schema: buildSubgraphSchema({ typeDefs, resolvers }),
+    plugins: [
+      ApolloServerPluginInlineTrace({
+        includeErrors: {
+          unmodified: true,
+        },
+      }),
+    ],
   });
   const { url } = await startStandaloneServer(server, {
     context,
