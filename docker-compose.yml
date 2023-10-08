@@ -23,7 +23,7 @@ services:
     volumes:
       - ./collector/otel-collector-config.yaml:/etc/otelcol-contrib/config.yaml
     ports:
-      - 4317:4317
+      - 43178:4317
   jaeger:
     container_name: jaeger
     image: jaegertracing/all-in-one:1.49

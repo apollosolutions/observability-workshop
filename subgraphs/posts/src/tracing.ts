@@ -5,27 +5,23 @@ import { OTLPTraceExporter } from "@opentelemetry/exporter-trace-otlp-grpc";
 import { HttpInstrumentation } from "@opentelemetry/instrumentation-http";
 import { ExpressInstrumentation } from "@opentelemetry/instrumentation-express";
 import { GraphQLInstrumentation } from "@opentelemetry/instrumentation-graphql";
-import { registerInstrumentations } from "@opentelemetry/instrumentation";
 import { OTLPMetricExporter } from "@opentelemetry/exporter-metrics-otlp-proto";
 
 const collectorOptions = {
-  url: "http://localhost:4317",
+  url: "http://localhost:43178",
   timeoutMillis: 500,
 };
 
-registerInstrumentations({
+const sdk = new NodeSDK({
+  serviceName: "posts",
   instrumentations: [
     new HttpInstrumentation(),
     new ExpressInstrumentation(),
     new GraphQLInstrumentation(),
   ],
-});
-const sdk = new NodeSDK({
-  serviceName: "posts",
   traceExporter: new OTLPTraceExporter(collectorOptions),
   metricReader: new PeriodicExportingMetricReader({
     exporter: new OTLPMetricExporter(collectorOptions),
-    exportIntervalMillis: 500,
   }),
 });
 

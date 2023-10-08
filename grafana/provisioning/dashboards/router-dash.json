@@ -602,7 +602,7 @@
           "disableTextWrap": false,
           "editorMode": "builder",
           "exemplar": false,
-          "expr": "avg by(operation_name) (increase(apollo_router_http_requests_total{has_errors=\"true\"}[$__rate_interval])) != 0",
+          "expr": "sum by(operation_name) (increase(apollo_router_http_requests_total{has_errors=\"true\"}[$__range]))",
           "format": "table",
           "fullMetaSearch": false,
           "includeNullMetadata": false,
@@ -613,7 +613,7 @@
           "useBackend": false
         }
       ],
-      "title": "Erroring Operations",
+      "title": "Erroring Operations Count",
       "transformations": [
         {
           "id": "groupBy",
@@ -636,6 +636,7 @@
             "fields": {},
             "sort": [
               {
+                "desc": true,
                 "field": "Value (sum)"
               }
             ]
@@ -1280,6 +1281,6 @@
   "timezone": "",
   "title": "Sample Router Dashboard for Prometheus",
   "uid": "kw3gsro4z",
-  "version": 1,
+  "version": 5,
   "weekStart": ""
 }

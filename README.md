@@ -24,7 +24,9 @@ To be able to run the workshop, you will need:
 - Docker (or [Colima](https://github.com/abiosoft/colima))
 - [NodeJS](https://nodejs.org/en)
 - [Rover](https://www.apollographql.com/docs/rover/getting-started) to publish the provided schema
-- The provided Apollo Studio Graph ID and access to the associated Apollo Studio instance
+- An enterprise Apollo Graph Ref and Apollo Key
+  - An enterprise trial is sufficient: [https://studio.apollographql.com/signup?type=enterprise-trial](https://bit.ly/studio-trial)
+  - If you are signed in to your existing Studio account, please sign out before registering
 
 ### MacOS & Linux (incl. WSL)
 
@@ -122,11 +124,11 @@ With that said, you can (and should!) look through the code to see if you can fi
 
 ### Issues
 
-We've included a number of issues within the code, and while you're likely to find a number of them, we want to outline a few here that you can look for if you're looking for a place to start.
+We've included a number of issues within the code, and while you're likely to find quite a few of them, we want to outline a few here that you can look for if you're looking for a place to start.
 
 **Please note that the resolution may not be something you can do today- just identifying the issue is often sufficient so that another development team can eventually address.**
 
-- One of the fields is causing an error, and we aren't sure which.
+- One of the fields is causing an error, and the team isn't sure which.
 - The team managing the backing REST API is noting that they are seeing too much traffic, and would like us to optimize the number of requests from both subgraphs
   - _There are two places where you can optimize for this_
 - The `User` type takes a long time to resolve and the team isn't sure why.
@@ -138,7 +140,7 @@ There are a few other areas to investigate to improve, but these are just a few 
 As mentioned above, this workshop consists of debugging and resolving issues within a poorly performing federated graph. When trying to resolve these issues, you can debug using this flow:
 
 - Open up [Grafana (hosted on http://localhost:3000/)](http://localhost:3000) (default username/password are admin/admin) and [Jaeger (on http://localhost:16686)](http://localhost:16686) to see the current metrics and traces of the application
-- Use k6 to simulate load via running `npm run loadtest` in another console window to run a short (30 second) load test. If you'd prefer a longer test, feel free to modify [`k6/script.js`](/k6/script.js)'s `duration`
+- Use k6 to simulate load via running `npm run loadtest` in another console window to run a short (30 second) load test. If you'd prefer a longer test, feel free to run `npm run loadtest:long`
 - Review Grafana, Jaeger, and the k6 results to identify problems
   - Grafana includes two prepopulated dashboards; one for `k6` results, which include HTTP response times, test results (e.g. percent errors on responses), and throughput, and another for some basic metrics for the router, such as error rates per operation, subgraph response times, and the like
   - Traces can be helpful in determining where time is being spent the most in a given request, so reviewing traces can help provide concrete action items
