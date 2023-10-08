@@ -38,16 +38,16 @@ telemetry:
                   path: .code
   tracing:
     propagation:
-      zipkin: true
+      jaeger: true
     trace_config:
       parent_based_sampler: true
       service_name: router
       service_namespace: graphql-summit
-      sampler: 0.5
+      sampler: 0.3
       attributes:
         environment: ${env.ENVIRONMENT:-development}
     otlp:
-      endpoint: localhost:4317
+      endpoint: localhost:43178
       protocol: grpc
 include_subgraph_errors:
   all: true

@@ -25,20 +25,20 @@
     "test": "jest"
   },
   "dependencies": {
-    "@apollo/datasource-rest": "^6.1.0",
-    "@apollo/server": "^4.9.2",
-    "@apollo/subgraph": "^2.5.3",
-    "@opentelemetry/api": "^1.4.1",
-    "@opentelemetry/exporter-metrics-otlp-proto": "^0.41.2",
-    "@opentelemetry/exporter-trace-otlp-grpc": "^0.41.2",
-    "@opentelemetry/instrumentation": "^0.41.2",
+    "@apollo/datasource-rest": "^6.2.1",
+    "@apollo/server": "^4.9.4",
+    "@apollo/subgraph": "^2.5.5",
+    "@opentelemetry/api": "^1.6.0",
+    "@opentelemetry/exporter-metrics-otlp-proto": "^0.43.0",
+    "@opentelemetry/exporter-trace-otlp-grpc": "^0.43.0",
+    "@opentelemetry/instrumentation": "^0.43.0",
     "@opentelemetry/instrumentation-express": "^0.33.1",
     "@opentelemetry/instrumentation-graphql": "^0.35.1",
-    "@opentelemetry/instrumentation-http": "^0.41.2",
-    "@opentelemetry/sdk-metrics": "^1.15.2",
-    "@opentelemetry/sdk-node": "^0.41.2",
+    "@opentelemetry/instrumentation-http": "^0.43.0",
+    "@opentelemetry/sdk-metrics": "^1.17.0",
+    "@opentelemetry/sdk-node": "^0.43.0",
     "dataloader": "^2.2.2",
-    "graphql": "^16.8.0",
+    "graphql": "^16.8.1",
     "graphql-tag": "^2.12.6"
   },
   "devDependencies": {
@@ -46,7 +46,7 @@
     "@graphql-codegen/cli": "^5.0.0",
     "@graphql-codegen/typescript": "^4.0.1",
     "@graphql-codegen/typescript-resolvers": "^4.0.1",
-    "@types/node": "^20.5.7",
+    "@types/node": "^20.8.2",
     "nodemon": "^3.0.1",
     "typescript": "^5.2.2"
   }
