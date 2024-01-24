@@ -4,7 +4,7 @@ docker compose pull
 docker pull grafana/k6:0.46.0
 
 # Download and extract the Router
-Invoke-WebRequest -URI "https://github.com/apollographql/router/releases/download/v1.32.0/router-v1.32.0-x86_64-pc-windows-msvc.tar.gz" -OutFile ".\router.tar.gz"
+Invoke-WebRequest -URI "https://github.com/apollographql/router/releases/download/v1.37.0/router-v1.37.0-x86_64-pc-windows-msvc.tar.gz" -OutFile ".\router.tar.gz"
 tar -zxvf router.tar.gz --strip-components=1 "dist/router.exe" 
 Remove-Item router.tar.gz
 

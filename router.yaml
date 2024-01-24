@@ -17,38 +17,46 @@ telemetry:
         all:
           redact: false
           send: true
-  metrics:
-    prometheus:
-      enabled: true
-      path: /metrics
-      listen: 0.0.0.0:9999
-    common:
-      service_name: router
-      service_namespace: graphql-summit
-      attributes:
-        supergraph:
-          context:
-            - named: has_errors
-        subgraph:
-          all:
-            errors:
-              include_messages: true
-              extensions:
-                - name: error_code
-                  path: .code
-  tracing:
-    propagation:
-      jaeger: true
-    trace_config:
-      parent_based_sampler: true
-      service_name: router
-      service_namespace: graphql-summit
-      sampler: 0.3
-      attributes:
-        environment: ${env.ENVIRONMENT:-development}
-    otlp:
-      endpoint: localhost:43178
-      protocol: grpc
+  instrumentation:
+    spans:
+      mode: spec_compliant
+      router:
+        attributes:
+          environment:
+            env: ENVIRONMENT
+            default: development
+  exporters:
+    metrics:
+      prometheus:
+        enabled: true
+        path: /metrics
+        listen: 0.0.0.0:9999
+      common:
+        service_name: router
+        service_namespace: graphql-summit
+        attributes:
+          supergraph:
+            context:
+              - named: has_errors
+          subgraph:
+            all:
+              errors:
+                include_messages: true
+                extensions:
+                  - name: error_code
+                    path: .code
+    tracing:
+      propagation:
+        jaeger: true
+      common:
+        parent_based_sampler: true
+        service_name: router
+        service_namespace: graphql-summit
+        sampler: 0.3
+      otlp:
+        enabled: true
+        endpoint: http://localhost:43178
+        protocol: grpc
 include_subgraph_errors:
   all: true
 rhai: {}
