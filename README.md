@@ -1,6 +1,6 @@
-# GraphQL Summit Observability Workshop
+# GraphQL Observability Workshop
 
-- [GraphQL Summit Observability Workshop](#graphql-summit-observability-workshop)
+- [GraphQL Observability Workshop](#graphql-observability-workshop)
   - [Prerequisites](#prerequisites)
     - [MacOS \& Linux (incl. WSL)](#macos--linux-incl-wsl)
     - [Windows](#windows)
