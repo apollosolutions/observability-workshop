@@ -1,4 +1,4 @@
-import { Resolvers } from "../__generated__/resolvers-types";
+import { Resolvers, User } from "../__generated__/resolvers-types";
 
 export const Query: Resolvers = {
   Query: {
@@ -12,16 +12,20 @@ export const Query: Resolvers = {
       return user;
     },
     users: async (_p, _a, { usersAPI }) => {
-      let users = await usersAPI.getUsers(
+      let userPromises = await usersAPI.getUsers(
         [...Array(10).keys()].map((i) => (i + 1).toString())
       );
-      users = await Promise.all(
-        users.map(async (user) => {
+      let users = await Promise.all(
+        userPromises.map(async (user) => {
+          if (!user) {
+            return null;
+          }
           user.address = await usersAPI.getUserAddress(user.id!);
           return user;
         })
       );
-      return users;
+
+      return users.filter((user): user is User => user !== null);
     },
   },
 };
