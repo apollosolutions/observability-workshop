@@ -33,7 +33,7 @@ telemetry:
         listen: 0.0.0.0:9999
       common:
         service_name: router
-        service_namespace: graphql-summit
+        service_namespace: observability-workshop
         attributes:
           supergraph:
             context:
@@ -51,7 +51,7 @@ telemetry:
       common:
         parent_based_sampler: true
         service_name: router
-        service_namespace: graphql-summit
+        service_namespace: observability-workshop
         sampler: 0.3
       otlp:
         enabled: true

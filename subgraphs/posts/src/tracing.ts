@@ -1,12 +1,9 @@
 // Import required symbols
 import { NodeSDK } from "@opentelemetry/sdk-node";
+import { getNodeAutoInstrumentations } from "@opentelemetry/auto-instrumentations-node";
 import { PeriodicExportingMetricReader } from "@opentelemetry/sdk-metrics";
-import { OTLPTraceExporter } from "@opentelemetry/exporter-trace-otlp-grpc";
-import { HttpInstrumentation } from "@opentelemetry/instrumentation-http";
-import { ExpressInstrumentation } from "@opentelemetry/instrumentation-express";
-import { GraphQLInstrumentation } from "@opentelemetry/instrumentation-graphql";
-import { OTLPMetricExporter } from "@opentelemetry/exporter-metrics-otlp-proto";
-
+import { OTLPTraceExporter } from "@opentelemetry/exporter-trace-otlp-http";
+import { OTLPMetricExporter } from "@opentelemetry/exporter-metrics-otlp-http";
 const collectorOptions = {
   url: "http://localhost:43178",
   timeoutMillis: 500,
@@ -14,16 +11,11 @@ const collectorOptions = {
 
 const sdk = new NodeSDK({
   serviceName: "posts",
-  instrumentations: [
-    new HttpInstrumentation(),
-    new ExpressInstrumentation(),
-    new GraphQLInstrumentation(),
-  ],
   traceExporter: new OTLPTraceExporter(collectorOptions),
   metricReader: new PeriodicExportingMetricReader({
     exporter: new OTLPMetricExporter(collectorOptions),
   }),
+  instrumentations: [getNodeAutoInstrumentations()],
 });
 
-// Register the provider to begin tracing
 sdk.start();
