@@ -17,7 +17,7 @@
     "dev:datasource": "npm run dev -w datasource"
   },
   "devDependencies": {
-    "npm-run-all": "^4.1.5"
+    "npm-run-all2": "^5.0.0"
   },
   "dependencies": {
     "dataloader": "^2.2.2"
