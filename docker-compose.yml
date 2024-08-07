@@ -26,7 +26,7 @@ services:
       - 43178:4317
   jaeger:
     container_name: jaeger
-    image: jaegertracing/all-in-one:1.49
+    image: jaegertracing/all-in-one:1.60
     command: --collector.otlp.grpc.host-port 0.0.0.0:4310 --collector.otlp.http.host-port 0.0.0.0:4311
     ports:
       - 16686:16686
