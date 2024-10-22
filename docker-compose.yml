@@ -1,7 +1,7 @@
 services:
   prometheus:
     container_name: prometheus
-    image: prom/prometheus:v2.47.0
+    image: prom/prometheus:v2.55.0
     ports:
       - 9000:9000
     volumes:
