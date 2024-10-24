@@ -19,7 +19,7 @@ services:
       - 3000:3000
   otel-collector:
     container_name: collector
-    image: otel/opentelemetry-collector-contrib:0.85.0
+    image: otel/opentelemetry-collector-contrib:0.112.0
     volumes:
       - ./collector/otel-collector-config.yaml:/etc/otelcol-contrib/config.yaml
     ports:
