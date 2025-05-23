@@ -18,13 +18,41 @@ telemetry:
           redact: false
           send: true
   instrumentation:
-    spans:
+    spans: # span configuration example https://www.apollographql.com/docs/graphos/routing/observability/telemetry/instrumentation/spans#span-configuration-example
       mode: spec_compliant
       router:
         attributes:
           environment:
             env: ENVIRONMENT
             default: development
+    instruments: # production instruments example https://www.apollographql.com/docs/graphos/routing/observability/telemetry/instrumentation/instruments#production-instrumentation-example
+      router:
+        http.server.request.duration:
+          attributes:
+            http.response.status_code: true
+            graphql.errors:
+              on_graphql_error: true
+            otel.name: observability-workshop-router
+            operation.name: "observability-workshop-router"
+            resource.name:
+              request_method: true
+      subgraph:
+        http.client.request.duration:
+          attributes:
+            subgraph.name: true
+            http.response.status_code:
+              subgraph_response_status: code
+            graphql.operation.name:
+              supergraph_operation_name: string
+            graphql.errors:
+              subgraph_on_graphql_error: true
+        http.client.request.body.size:
+          attributes:
+            subgraph.name: true
+      connector: # connector isnt part of the standard production instrumentation
+        http.client.request.body.size: true
+        http.client.request.duration: true
+        http.client.response.body.size: true
   exporters:
     metrics:
       prometheus:
@@ -32,30 +60,29 @@ telemetry:
         path: /metrics
         listen: 0.0.0.0:9999
       common:
-        service_name: router
+        service_name: observability-workshop-router
         service_namespace: observability-workshop
-        attributes:
-          supergraph:
-            context:
-              - named: has_errors
-          subgraph:
-            all:
-              errors:
-                include_messages: true
-                extensions:
-                  - name: error_code
-                    path: .code
+        resource:
+          "deployment.environment.name": "local"
+#          "datadog.resource.hostname": "robertsMacbook"
+      otlp:
+        temporality: delta
+        enabled: true
+        endpoint: http://localhost:4317
+        protocol: grpc
     tracing:
       propagation:
-        jaeger: true
+        jaeger: false
+        datadog: true # do we need this?
       common:
         parent_based_sampler: true
-        service_name: router
+        service_name: observability-workshop-router
         service_namespace: observability-workshop
         sampler: 0.3
       otlp:
+        temporality: delta
         enabled: true
-        endpoint: http://localhost:43178
+        endpoint: http://localhost:4317
         protocol: grpc
 include_subgraph_errors:
   all: true

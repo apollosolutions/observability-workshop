@@ -2,19 +2,56 @@ receivers:
   otlp:
     protocols:
       grpc:
+        endpoint: 0.0.0.0:4317
       http:
-  otlp/spanmetrics:
-    protocols:
-      grpc:
-        endpoint: 0.0.0.0:12346
+        endpoint: 0.0.0.0:4318
+  hostmetrics:
+#    root_path: /hostfs
+    collection_interval: 10s
+    scrapers:
+      paging:
+        metrics:
+          system.paging.utilization:
+            enabled: true
+      cpu:
+        metrics:
+          system.cpu.utilization:
+            enabled: true
+      disk:
+      filesystem:
+        metrics:
+          system.filesystem.utilization:
+            enabled: true
+      load:
+      memory:
+      network:
+      processes:
+
 
 processors:
+  # The batch processor batches telemetry data into larger payloads.
+  # It is necessary for the Datadog traces exporter to work optimally,
+  # and is recommended for any production pipeline.
   batch:
-  spanmetrics:
-    metrics_exporter: prometheus
+    # Datadog APM Intake limit is 3.2MB. Let's make sure the batches do not
+    # go over that.
+    send_batch_max_size: 1000
+    send_batch_size: 100
+    timeout: 10s
+
+#  resourcedetection/docker:
+#    detectors: [env, docker]
+#    timeout: 2s
+#    override: false
+
+# Read more about exporters here:
+# https://opentelemetry.io/docs/collector/configuration/#connectors
+connectors:
+  # The Datadog connector is necessary for APM Trace metrics.
+  datadog/connector:
 
 exporters:
-  logging:
+  debug:
     verbosity: detailed
   prometheus:
     endpoint: "0.0.0.0:9464"
@@ -22,6 +59,10 @@ exporters:
     endpoint: jaeger:4310
     tls:
       insecure: true
+  datadog/exporter: #https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/exporter/datadogexporter
+    api:
+      key: ${env:DD_API_KEY} # Set your Datadog API key as an environment variable
+      #site: "datadoghq.com" # Use "datadoghq.eu" if you're in the EU region
 extensions:
   health_check:
   zpages:
@@ -31,9 +72,10 @@ service:
   pipelines:
     traces:
       receivers: [otlp]
-      processors: [batch, spanmetrics]
-      exporters: [otlp]
-    metrics:
-      receivers: [otlp/spanmetrics, otlp]
       processors: [batch]
-      exporters: [prometheus]
+      exporters: [otlp, datadog/connector,datadog/exporter]
+    metrics:
+      receivers: [hostmetrics, otlp, datadog/connector]
+      processors: [batch]
+      exporters: [prometheus, datadog/exporter]
+
