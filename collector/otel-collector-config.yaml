@@ -5,8 +5,8 @@ receivers:
         endpoint: 0.0.0.0:4317
       http:
         endpoint: 0.0.0.0:4318
+
   hostmetrics:
-#    root_path: /hostfs
     collection_interval: 10s
     scrapers:
       paging:
@@ -17,6 +17,12 @@ receivers:
         metrics:
           system.cpu.utilization:
             enabled: true
+          system.cpu.physical.count:
+            enabled: true
+          system.cpu.logical.count:
+            enabled: true
+          system.cpu.frequency:
+            enabled: true
       disk:
       filesystem:
         metrics:
@@ -26,7 +32,14 @@ receivers:
       memory:
       network:
       processes:
-
+  # The prometheus receiver scrapes metrics needed for the OpenTelemetry Collector Dashboard.
+  prometheus/receiver:
+    config:
+      scrape_configs:
+        - job_name: 'otelcol'
+          scrape_interval: 10s
+          static_configs:
+            - targets: [ 'localhost:8888' ]
 
 processors:
   # The batch processor batches telemetry data into larger payloads.
@@ -39,10 +52,47 @@ processors:
     send_batch_size: 100
     timeout: 10s
 
+# doesnt work with mac
 #  resourcedetection/docker:
 #    detectors: [env, docker]
 #    timeout: 2s
 #    override: false
+
+  resourcedetection:
+    # bare metal
+    detectors: [ env, system ]
+    system:
+      resource_attributes:
+        os.description:
+          enabled: true
+        host.arch:
+          enabled: true
+        host.cpu.vendor.id:
+          enabled: true
+        host.cpu.family:
+          enabled: true
+        host.cpu.model.id:
+          enabled: true
+        host.cpu.model.name:
+          enabled: true
+        host.cpu.stepping:
+          enabled: true
+        host.cpu.cache.l2.size:
+          enabled: true
+#    # GCP
+#    detectors: [ env, gcp, system ]
+#    # AWS
+#    detectors: [ env, ecs, ec2, system ]
+#    # Azure
+#    detectors: [ env, azure, system ]
+#    timeout: 2s
+#    override: false
+
+#  resourcedetection/docker:
+#    detectors: [ env, docker ]
+#    timeout: 2s
+#    override: false
+
 
 # Read more about exporters here:
 # https://opentelemetry.io/docs/collector/configuration/#connectors
@@ -53,13 +103,14 @@ connectors:
 exporters:
   debug:
     verbosity: detailed
-  prometheus:
-    endpoint: "0.0.0.0:9464"
   otlp:
     endpoint: jaeger:4310
     tls:
       insecure: true
   datadog/exporter: #https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/exporter/datadogexporter
+    traces:
+      span_name_as_resource_name: true
+      trace_buffer: 500
     api:
       key: ${env:DD_API_KEY} # Set your Datadog API key as an environment variable
       #site: "datadoghq.com" # Use "datadoghq.eu" if you're in the EU region
@@ -72,10 +123,10 @@ service:
   pipelines:
     traces:
       receivers: [otlp]
-      processors: [batch]
+      processors: [batch, resourcedetection]
       exporters: [otlp, datadog/connector,datadog/exporter]
     metrics:
-      receivers: [hostmetrics, otlp, datadog/connector]
-      processors: [batch]
-      exporters: [prometheus, datadog/exporter]
+      receivers: [hostmetrics, otlp, prometheus/receiver, datadog/connector]
+      processors: [batch, resourcedetection]
+      exporters: [datadog/exporter]
 

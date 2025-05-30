@@ -22,20 +22,50 @@ telemetry:
       mode: spec_compliant
       router:
         attributes:
+          # Standard attributes
+          http.response.status_code: true
+          error.type: true
+          dd.trace_id: true
+          otel.name: router
+          operation.name: "router"
+          resource.name:
+            request_method: true
+          graphql.operation_name:
+            operation_name: "string"
           environment:
             env: ENVIRONMENT
-            default: development
+            default: local
+      supergraph:
+        attributes:
+          graphql.operation.name: true
+          graphql.operation.type: true
+          otel.name: supergraph
+          operation.name: "supergraph"
+          resource.name:
+            operation_name: string
+      subgraph:
+        attributes:
+          otel.name: subgraph
+          operation.name: "subgraph"
+          resource.name:
+            subgraph_operation_name: string
     instruments: # production instruments example https://www.apollographql.com/docs/graphos/routing/observability/telemetry/instrumentation/instruments#production-instrumentation-example
       router:
         http.server.request.duration:
+          # Adding subgraph name, response status code from the router and the operation name
           attributes:
             http.response.status_code: true
+            graphql.operation.name:
+              operation_name: string
+            # This attribute will be set to true if the response contains graphql errors
             graphql.errors:
               on_graphql_error: true
-            otel.name: observability-workshop-router
-            operation.name: "observability-workshop-router"
-            resource.name:
-              request_method: true
+#            resource.name:
+#              request_method: true
+        http.server.response.body.size:
+          attributes:
+            graphql.operation.name:
+              operation_name: string
       subgraph:
         http.client.request.duration:
           attributes:
@@ -44,6 +74,7 @@ telemetry:
               subgraph_response_status: code
             graphql.operation.name:
               supergraph_operation_name: string
+            # This attribute will be set to true if the response contains graphql errors
             graphql.errors:
               subgraph_on_graphql_error: true
         http.client.request.body.size:
@@ -64,7 +95,7 @@ telemetry:
         service_namespace: observability-workshop
         resource:
           "deployment.environment.name": "local"
-#          "datadog.resource.hostname": "robertsMacbook"
+          "host.name": "robertsMac"
       otlp:
         temporality: delta
         enabled: true
