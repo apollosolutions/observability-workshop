@@ -5,7 +5,7 @@ import { PeriodicExportingMetricReader } from "@opentelemetry/sdk-metrics";
 import { OTLPTraceExporter } from "@opentelemetry/exporter-trace-otlp-http";
 import { OTLPMetricExporter } from "@opentelemetry/exporter-metrics-otlp-http";
 const collectorOptions = {
-  url: "http://localhost:43178",
+  url: "http://localhost:4317",
   timeoutMillis: 500,
 };
 
