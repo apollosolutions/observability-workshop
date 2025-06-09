@@ -93,7 +93,7 @@ telemetry:
       common:
         service_name: observability-workshop-router
         service_namespace: observability-workshop
-        resource:
+        resource: ## Resource attributes are used to identify the service in datadog see https://docs.datadoghq.com/opentelemetry/mapping/semantic_mapping/?tab=datadogexporter and https://opentelemetry.io/docs/specs/semconv/resource/
           "deployment.environment.name": "local"
           "host.name": "robertsMac"
       otlp:
