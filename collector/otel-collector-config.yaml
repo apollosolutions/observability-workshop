@@ -111,6 +111,12 @@ exporters:
     traces:
       span_name_as_resource_name: true
       trace_buffer: 500
+    metrics:
+      # Add all resource attributes as tags for metrics https://docs.datadoghq.com/opentelemetry/mapping/semantic_mapping/?tab=datadogexporter#metrics-attribute-mapping
+      resource_attributes_as_tags: true
+      histograms:
+        mode: distributions
+        send_aggregation_metrics: true
     api:
       key: ${env:DD_API_KEY} # Set your Datadog API key as an environment variable
       #site: "datadoghq.com" # Use "datadoghq.eu" if you're in the EU region
