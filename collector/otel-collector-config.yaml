@@ -107,14 +107,14 @@ exporters:
     endpoint: jaeger:4310
     tls:
       insecure: true
-  datadog/exporter: #https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/exporter/datadogexporter
+  datadog/exporter: #https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/exporter/datadogexporter and https://github.com/open-telemetry/opentelemetry-collector-contrib/blob/main/exporter/datadogexporter/examples/collector.yaml
     traces:
       span_name_as_resource_name: true
       trace_buffer: 500
     metrics:
       # Add all resource attributes as tags for metrics https://docs.datadoghq.com/opentelemetry/mapping/semantic_mapping/?tab=datadogexporter#metrics-attribute-mapping
       resource_attributes_as_tags: true
-      histograms:
+      histograms: # https://github.com/open-telemetry/opentelemetry-collector-contrib/blob/main/exporter/datadogexporter/examples/collector.yaml#L277
         mode: distributions
         send_aggregation_metrics: true
     api:
