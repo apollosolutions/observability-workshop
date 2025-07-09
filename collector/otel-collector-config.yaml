@@ -41,6 +41,24 @@ receivers:
           static_configs:
             - targets: [ 'localhost:8888' ]
 
+  docker_stats: # Note: doesn't work on MAC. Also, if you are using the collector image, you may need to configure additional permissions for the collector to have access to the Docker socket.  https://github.com/open-telemetry/opentelemetry-collector-contrib/issues/11791
+    endpoint: unix:///var/run/docker.sock # (default)
+    metrics:
+      container.network.io.usage.rx_packets:
+        enabled: true
+      container.network.io.usage.tx_packets:
+        enabled: true
+      container.cpu.usage.system:
+        enabled: true
+      container.memory.rss:
+        enabled: true
+      container.blockio.io_serviced_recursive:
+        enabled: true
+      container.uptime:
+        enabled: true
+      container.memory.hierarchical_memory_limit:
+        enabled: true
+
 processors:
   # The batch processor batches telemetry data into larger payloads.
   # It is necessary for the Datadog traces exporter to work optimally,
@@ -123,6 +141,13 @@ exporters:
 extensions:
   health_check:
   zpages:
+#  datadog:  # https://github.com/open-telemetry/opentelemetry-collector-contrib/blob/main/extension/datadogextension/README.md
+#    api:
+#      key: ${env:DD_API_KEY}
+#      site: "datadoghq.com"
+#    http:
+#      endpoint: "localhost:9875"
+#      path: "/metadata"
 
 service:
   extensions: [health_check, zpages]
@@ -132,7 +157,7 @@ service:
       processors: [batch, resourcedetection]
       exporters: [otlp, datadog/connector,datadog/exporter]
     metrics:
-      receivers: [hostmetrics, otlp, prometheus/receiver, datadog/connector]
+      receivers: [hostmetrics, otlp, prometheus/receiver, datadog/connector, docker_stats]
       processors: [batch, resourcedetection]
       exporters: [datadog/exporter]
 

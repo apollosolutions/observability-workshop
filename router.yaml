@@ -25,7 +25,6 @@ telemetry:
           # Standard attributes
           http.response.status_code: true
           error.type: true
-          dd.trace_id: true
           otel.name: router
           operation.name: "router"
           resource.name:
@@ -35,14 +34,48 @@ telemetry:
           environment:
             env: ENVIRONMENT
             default: local
+          # **CRITICAL for Log Correlation**: Adds 'dd.trace_id' to spans, which is
+          # then automatically included in OTLP logs for Datadog correlation.
+          dd.trace_id: true
+          # **CRITICAL for Error Tracking**: Sets the span status to 'error'
+          # if a GraphQL error is present, enabling Datadog's error tracking.
+          otel.status_code:
+            static: error
+            condition:
+              eq:
+                - true
+                - on_graphql_error: true
+          # Conditional custom attribute
+          otel.status_description: # You can conditionally put a status description attribute on your span if it respect the condition
+            static: "there was an error"
+            condition: # http response status code != 200 or it contains a graphql error in the payload
+              any:
+                - not:
+                    eq:
+                      - response_status: code
+                      - 200
+                - eq:
+                    - on_graphql_error
+                    - true
       supergraph:
         attributes:
-          graphql.operation.name: true
-          graphql.operation.type: true
           otel.name: supergraph
           operation.name: "supergraph"
           resource.name:
             operation_name: string
+          # Apply the value which was retrieved from the Cookie or
+          # the x-api-key Header in the `in-house.rhai` supergraph_service
+          "apollo_key_account":
+            response_context: "apollo-key-account"
+          cost.estimated: true
+          cost.actual: true
+          cost.result: true
+          graphql.operation.name: true
+          otel.status_code:
+            static: error
+            condition:
+              exists:
+                response_errors: $[0].extensions.code # Here is an example to get the first error code, `on_graphql_error` is also available for supergraph
       subgraph:
         attributes:
           otel.name: subgraph
@@ -55,17 +88,17 @@ telemetry:
           # Adding subgraph name, response status code from the router and the operation name
           attributes:
             http.response.status_code: true
-            graphql.operation.name:
-              operation_name: string
+            graphql.operation.name: # remove for cost reasons
+              operation_name: string # remove for cost reasons
             # This attribute will be set to true if the response contains graphql errors
             graphql.errors:
               on_graphql_error: true
 #            resource.name:
 #              request_method: true
-        http.server.response.body.size:
-          attributes:
-            graphql.operation.name:
-              operation_name: string
+#        http.server.response.body.size: # doesnt work
+#          attributes:
+#            graphql.operation.name:
+#              operation_name: string
       subgraph:
         http.client.request.duration:
           attributes:
@@ -91,13 +124,15 @@ telemetry:
         path: /metrics
         listen: 0.0.0.0:9999
       common:
-        service_name: observability-workshop-router
-        service_namespace: observability-workshop
-        resource: ## Resource attributes are used to identify the service in datadog see https://docs.datadoghq.com/opentelemetry/mapping/semantic_mapping/?tab=datadogexporter and https://opentelemetry.io/docs/specs/semconv/resource/
+#        service_name: observability-workshop-router
+#        service_namespace: observability-workshop
+        resource: ## Resource attributes are used to identify the service in datadog see https://docs.datadoghq.com/opentelemetry/mapping/semantic_mapping/?tab=datadogexporter and https://opentelemetry.io/docs/specs/semconv/resource/ and https://www.apollographql.com/docs/graphos/routing/observability/telemetry/metrics-exporters/overview#resource
           "deployment.environment.name": "local"
           "host.name": "robertsMac"
+          "service.name": "observability-workshop-router"
+#          "service.version": "2.3.0"
       otlp:
-        temporality: delta
+        temporality: delta # <-- REQUIRED for Datadog
         enabled: true
         endpoint: http://localhost:4317
         protocol: grpc
@@ -106,10 +141,15 @@ telemetry:
         jaeger: false
         datadog: true # do we need this?
       common:
-        parent_based_sampler: true
+       # parent_based_sampler: true  # not needed because everything needs to be sent to the otel collector
         service_name: observability-workshop-router
         service_namespace: observability-workshop
         sampler: 0.3
+        resource: ## Resource attributes are used to identify the service in datadog see https://docs.datadoghq.com/opentelemetry/mapping/semantic_mapping/?tab=datadogexporter and https://opentelemetry.io/docs/specs/semconv/resource/ and https://www.apollographql.com/docs/graphos/routing/observability/telemetry/metrics-exporters/overview#resource
+          "deployment.environment.name": "local"
+          "host.name": "robertsMac"
+          "service.name": "observability-workshop-router"
+#          "service.version": "2.3.0"
       otlp:
         temporality: delta
         enabled: true

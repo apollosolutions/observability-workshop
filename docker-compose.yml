@@ -19,7 +19,7 @@ services:
       - 3000:3000
   otel-collector:
     container_name: collector
-    image: otel/opentelemetry-collector-contrib:0.126.0
+    image: otel/opentelemetry-collector-contrib:0.128.0    # https://github.com/open-telemetry/opentelemetry-collector-releases
     hostname: robertsMac
     user: "0"
     volumes:
@@ -30,6 +30,7 @@ services:
     ports:
       - 4317:4317
       - 4318:4318
+      - 9875:9875
     environment:
       - DD_API_KEY
       - OTEL_RESOURCE_ATTRIBUTES="service.name=observability-workshop-router,deployment.environment.name=local"

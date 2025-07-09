@@ -1,7 +1,7 @@
 router
 *.exe
-.env*
-!.env.sample
+.env
+!.env
 grafana/data/*
 !grafana/data/.gitkeep
 node_modules/

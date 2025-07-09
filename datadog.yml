@@ -1,0 +1,5 @@
+#otlp_config:
+#  receiver:
+#    protocols:
+#      grpc:
+#        endpoint: 0.0.0.0:4317
