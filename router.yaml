@@ -124,13 +124,11 @@ telemetry:
         path: /metrics
         listen: 0.0.0.0:9999
       common:
-#        service_name: observability-workshop-router
-#        service_namespace: observability-workshop
         resource: ## Resource attributes are used to identify the service in datadog see https://docs.datadoghq.com/opentelemetry/mapping/semantic_mapping/?tab=datadogexporter and https://opentelemetry.io/docs/specs/semconv/resource/ and https://www.apollographql.com/docs/graphos/routing/observability/telemetry/metrics-exporters/overview#resource
           "deployment.environment.name": "local"
           "host.name": "robertsMac"
           "service.name": "observability-workshop-router"
-#          "service.version": "2.3.0"
+      #          "service.version": "2.3.0" # no need to specify, it's populated by the router
       otlp:
         temporality: delta # <-- REQUIRED for Datadog
         enabled: true
@@ -149,7 +147,7 @@ telemetry:
           "deployment.environment.name": "local"
           "host.name": "robertsMac"
           "service.name": "observability-workshop-router"
-#          "service.version": "2.3.0"
+      #          "service.version": "2.3.0" # no need to specify, it's populated by the router
       otlp:
         temporality: delta
         enabled: true
