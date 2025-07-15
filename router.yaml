@@ -139,10 +139,8 @@ telemetry:
         jaeger: false
         datadog: true # do we need this?
       common:
-       # parent_based_sampler: true  # not needed because everything needs to be sent to the otel collector
-        service_name: observability-workshop-router
-        service_namespace: observability-workshop
-        sampler: 0.3
+        sampler: 1.0 # Send all traces to collector for intelligent sampling
+        parent_based_sampler: true # Enable parent-based sampling
         resource: ## Resource attributes are used to identify the service in datadog see https://docs.datadoghq.com/opentelemetry/mapping/semantic_mapping/?tab=datadogexporter and https://opentelemetry.io/docs/specs/semconv/resource/ and https://www.apollographql.com/docs/graphos/routing/observability/telemetry/metrics-exporters/overview#resource
           "deployment.environment.name": "local"
           "host.name": "robertsMac"

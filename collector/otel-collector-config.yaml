@@ -70,11 +70,42 @@ processors:
     send_batch_size: 100
     timeout: 10s
 
-# doesnt work with mac
-#  resourcedetection/docker:
-#    detectors: [env, docker]
-#    timeout: 2s
-#    override: false
+  # Tail sampling for intelligent sampling decisions
+  tail_sampling:
+    decision_wait: 10s
+    num_traces: 50000
+    policies:
+      # Always sample errors
+      - name: errors
+        type: status_code
+        status_code:
+          status_codes: [ERROR]
+      # Always sample slow requests
+      - name: slow_requests
+        type: latency
+        latency:
+          threshold_ms: 1000
+      # Sample GraphQL errors
+      - name: graphql_errors
+        type: string_attribute
+        string_attribute:
+          key: graphql.errors
+          values: ["true"]
+      # Random sampling for everything else
+      - name: random_sampling
+        type: probabilistic
+        probabilistic:
+          sampling_percentage: 10
+
+    # # Probabilistic sampling for consistent sampling across incomplete traces
+    # probabilistic_sampler:
+    #   sampling_percentage: 100 # Keep all traces that make it to collector
+
+  # doesnt work with mac
+  #  resourcedetection/docker:
+  #    detectors: [env, docker]
+  #    timeout: 2s
+  #    override: false
 
   resourcedetection:
     # bare metal
@@ -154,7 +185,7 @@ service:
   pipelines:
     traces:
       receivers: [otlp]
-      processors: [batch, resourcedetection]
+      processors: [resourcedetection, tail_sampling, batch]
       exporters: [otlp, datadog/connector,datadog/exporter]
     metrics:
       receivers: [hostmetrics, otlp, prometheus/receiver, datadog/connector, docker_stats]
