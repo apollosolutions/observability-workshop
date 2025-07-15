@@ -41,22 +41,28 @@ telemetry:
           # if a GraphQL error is present, enabling Datadog's error tracking.
           otel.status_code:
             static: error
-            condition:
-              eq:
-                - true
-                - on_graphql_error: true
-          # Conditional custom attribute
-          otel.status_description: # You can conditionally put a status description attribute on your span if it respect the condition
-            static: "there was an error"
             condition: # http response status code != 200 or it contains a graphql error in the payload
               any:
-                - not:
-                    eq:
-                      - response_status: code
-                      - 200
-                - eq:
-                    - on_graphql_error
-                    - true
+              - not:
+                  eq:
+                  - response_status: code
+                  - 200
+              - eq:
+                  - true
+                  - on_graphql_error: true
+
+          error.message:
+            static: "Status code != 200 or it contains a graphql error in the payload"
+            condition: # http response status code != 200 or it contains a graphql error in the payload
+              any:
+              - not:
+                  eq:
+                  - response_status: code
+                  - 200
+              - eq:
+                  - true
+                  - on_graphql_error: true
+
       supergraph:
         attributes:
           otel.name: supergraph
@@ -76,12 +82,36 @@ telemetry:
             condition:
               exists:
                 response_errors: $[0].extensions.code # Here is an example to get the first error code, `on_graphql_error` is also available for supergraph
+          # **CRITICAL for Error Details**: Captures GraphQL error message at supergraph level
+          error.message:
+            response_errors: "$.[0].message"
+            condition:
+              exists:
+                response_errors: "$.[0].message"
+          # **ADDITIONAL Error Details**: Captures error extensions for more context
+          "error.extensions":
+            response_errors: "$.[0].extensions"
+            condition:
+              exists:
+                response_errors: "$.[0].extensions"
       subgraph:
         attributes:
           otel.name: subgraph
           operation.name: "subgraph"
           resource.name:
             subgraph_operation_name: string
+          # **CRITICAL for Error Details**: Captures subgraph error message
+          error.message:
+            subgraph_response_errors: "$.[0].message"
+            condition:
+              exists:
+                subgraph_response_errors: "$.[0].message"
+          # **ADDITIONAL Error Details**: Captures subgraph error extensions
+          "error.extensions":
+            subgraph_response_errors: "$.[0].extensions"
+            condition:
+              exists:
+                subgraph_response_errors: "$.[0].extensions"
     instruments: # production instruments example https://www.apollographql.com/docs/graphos/routing/observability/telemetry/instrumentation/instruments#production-instrumentation-example
       router:
         http.server.request.duration:
