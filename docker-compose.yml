@@ -34,7 +34,7 @@ services:
       - 9875:9875
     environment:
       - DD_API_KEY
-      - OTEL_RESOURCE_ATTRIBUTES="service.name=observability-workshop-router,deployment.environment.name=local"
+      - OTEL_RESOURCE_ATTRIBUTES="deployment.environment.name=local"
   jaeger:
     container_name: jaeger
     image: jaegertracing/all-in-one:1.49
