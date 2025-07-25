@@ -193,8 +193,12 @@ service:
   pipelines:
     traces:
       receivers: [otlp]
-      processors: [resourcedetection, tail_sampling, batch]
-      exporters: [debug, otlp, datadog/connector, datadog/exporter]
+      processors: [resourcedetection, batch]
+      exporters: [debug, otlp, datadog/connector]
+    traces/sampling:
+      receivers: [datadog/connector]
+      processors: [tail_sampling]
+      exporters: [datadog/exporter]
     metrics:
       receivers: [hostmetrics, otlp, prometheus/receiver, datadog/connector, docker_stats]
       processors: [resourcedetection, batch]
