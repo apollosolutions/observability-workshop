@@ -25,20 +25,16 @@ telemetry:
           http.response.status_code: true
           error.type: true
           otel.name: router
-          operation.name: "router"
+          operation.name: router
           resource.name:
             request_method: true
           graphql.operation_name:
             operation_name: "string"
-          environment:
-            env: ENVIRONMENT
-            default: local
-          dd.trace_id: true
 
       supergraph:
         attributes:
           otel.name: supergraph
-          operation.name: "supergraph"
+          operation.name: supergraph
           resource.name:
             operation_name: string
           graphql.operation.name: true
@@ -56,7 +52,7 @@ telemetry:
       subgraph:
         attributes:
           otel.name: subgraph
-          operation.name: "subgraph"
+          operation.name: subgraph
           resource.name:
             subgraph_operation_name: string
           otel.status_code:
