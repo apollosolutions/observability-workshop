@@ -33,34 +33,7 @@ telemetry:
           environment:
             env: ENVIRONMENT
             default: local
-          # **CRITICAL for Log Correlation**: Adds 'dd.trace_id' to spans, which is
-          # then automatically included in OTLP logs for Datadog correlation.
           dd.trace_id: true
-          # **CRITICAL for Error Tracking**: Sets the span status to 'error'
-          # if a GraphQL error is present, enabling Datadog's error tracking.
-          otel.status_code:
-            static: error
-            condition: # http response status code != 200 or it contains a graphql error in the payload
-              any:
-              - not:
-                  eq:
-                  - response_status: code
-                  - 200
-              - eq:
-                  - true
-                  - on_graphql_error: true
-
-          error.message:
-            static: "Status code != 200 or it contains a graphql error in the payload"
-            condition: # http response status code != 200 or it contains a graphql error in the payload
-              any:
-              - not:
-                  eq:
-                  - response_status: code
-                  - 200
-              - eq:
-                  - true
-                  - on_graphql_error: true
 
       supergraph:
         attributes:
