@@ -59,18 +59,22 @@ telemetry:
           operation.name: "subgraph"
           resource.name:
             subgraph_operation_name: string
-          # **CRITICAL for Error Details**: Captures subgraph error message
+          otel.status_code:
+            static: ERROR
+            condition:
+              eq:
+              - true
+              - subgraph_on_graphql_error: true
+          otel.status_description:
+            subgraph_response_errors: $[0].extensions.code
+          # Datadog Error Tracking: error.*
           error.message:
-            subgraph_response_errors: "$.[0].message"
-            condition:
-              exists:
-                subgraph_response_errors: "$.[0].message"
-          # **ADDITIONAL Error Details**: Captures subgraph error extensions
-          "error.extensions":
-            subgraph_response_errors: "$.[0].extensions"
-            condition:
-              exists:
-                subgraph_response_errors: "$.[0].extensions"
+            subgraph_response_errors: $
+          error.extensions:
+            subgraph_response_errors: $[0].extensions
+          error.stack:
+            subgraph_response_errors: $[0].extensions.stacktrace
+
     instruments: # production instruments example https://www.apollographql.com/docs/graphos/routing/observability/telemetry/instrumentation/instruments#production-instrumentation-example
       router:
         http.server.request.duration:
