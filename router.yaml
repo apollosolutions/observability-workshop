@@ -41,13 +41,6 @@ telemetry:
           operation.name: "supergraph"
           resource.name:
             operation_name: string
-          # Apply the value which was retrieved from the Cookie or
-          # the x-api-key Header in the `in-house.rhai` supergraph_service
-          "apollo_key_account":
-            response_context: "apollo-key-account"
-          cost.estimated: true
-          cost.actual: true
-          cost.result: true
           graphql.operation.name: true
           otel.status_code:
             static: error
