@@ -19,7 +19,7 @@ telemetry:
           send: true
   instrumentation:
     spans: # span configuration example https://www.apollographql.com/docs/graphos/routing/observability/telemetry/instrumentation/spans#span-configuration-example
-      mode: spec_compliant
+      default_attribute_requirement_level: recommended # change to required for less data https://www.apollographql.com/docs/graphos/routing/observability/telemetry/instrumentation/spans#default_attribute_requirement_level
       router:
         attributes:
           # Standard attributes
