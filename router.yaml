@@ -21,8 +21,7 @@ telemetry:
     spans: # span configuration example https://www.apollographql.com/docs/graphos/routing/observability/telemetry/instrumentation/spans#span-configuration-example
       default_attribute_requirement_level: recommended # change to required for less data https://www.apollographql.com/docs/graphos/routing/observability/telemetry/instrumentation/spans#default_attribute_requirement_level
       router:
-        attributes:
-          # Standard attributes
+        attributes: # attribute options https://www.apollographql.com/docs/graphos/routing/observability/telemetry/instrumentation/standard-attributes#router
           http.response.status_code: true
           error.type: true
           otel.name: router
