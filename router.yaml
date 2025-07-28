@@ -43,22 +43,16 @@ telemetry:
             operation_name: string
           graphql.operation.name: true
           otel.status_code:
-            static: error
+            static: ERROR
             condition:
-              exists:
-                response_errors: $[0].extensions.code # Here is an example to get the first error code, `on_graphql_error` is also available for supergraph
-          # **CRITICAL for Error Details**: Captures GraphQL error message at supergraph level
+              eq:
+              - true
+              - on_graphql_error: true
+          otel.status_description:
+            response_errors: $[0].extensions.code
           error.message:
-            response_errors: "$.[0].message"
-            condition:
-              exists:
-                response_errors: "$.[0].message"
-          # **ADDITIONAL Error Details**: Captures error extensions for more context
-          "error.extensions":
-            response_errors: "$.[0].extensions"
-            condition:
-              exists:
-                response_errors: "$.[0].extensions"
+            response_errors: $[0].message
+
       subgraph:
         attributes:
           otel.name: subgraph
