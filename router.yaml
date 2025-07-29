@@ -66,8 +66,6 @@ telemetry:
           # Datadog Error Tracking: error.*
           error.message:
             subgraph_response_errors: $[0].message
-          error.extensions:
-            subgraph_response_errors: $[0].extensions
           error.stack:
             subgraph_response_errors: $[0].extensions.stacktrace
 
