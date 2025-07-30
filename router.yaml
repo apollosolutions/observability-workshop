@@ -48,6 +48,8 @@ telemetry:
             response_errors: $[0].extensions.code
           error.message:
             response_errors: $[0].message
+          graphql.errors:
+            on_graphql_error: true
 
       subgraph:
         attributes:
@@ -68,6 +70,8 @@ telemetry:
             subgraph_response_errors: $[0].message
           error.stack:
             subgraph_response_errors: $[0].extensions.stacktrace
+          graphql.errors:
+            subgraph_on_graphql_error: true
 
     instruments: # production instruments example https://www.apollographql.com/docs/graphos/routing/observability/telemetry/instrumentation/instruments#production-instrumentation-example
       router:

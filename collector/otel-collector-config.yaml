@@ -70,11 +70,18 @@ processors:
     send_batch_size: 100
     timeout: 10s
 
+  # See more about sampling concepts here: https://opentelemetry.io/docs/concepts/sampling/
   # Tail sampling for intelligent sampling decisions
-  tail_sampling:
+  tail_sampling: # https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/processor/tailsamplingprocessor#readme
     decision_wait: 10s
     num_traces: 50000
     policies:
+      # Always Sample GraphQL errors
+      - name: graphql_errors
+        type: boolean_attribute
+        boolean_attribute:
+          key: graphql.errors
+          value: true
       # Always sample errors
       - name: errors
         type: status_code
@@ -85,12 +92,6 @@ processors:
         type: latency
         latency:
           threshold_ms: 1000
-      # Sample GraphQL errors
-      - name: graphql_errors
-        type: string_attribute
-        string_attribute:
-          key: graphql.errors
-          values: ["true"]
       # Random sampling for everything else
       - name: random_sampling
         type: probabilistic
