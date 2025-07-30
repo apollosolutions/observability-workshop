@@ -71,7 +71,9 @@ processors:
     timeout: 10s
 
   # See more about sampling concepts here: https://opentelemetry.io/docs/concepts/sampling/
-  # Tail sampling for intelligent sampling decisions
+  # Tail sampling for intelligent sampling decisions. It requires all spans for a given trace to be sent to the same collector. 
+  # If this is not the case, you can implement special load balencing via an oltp enpoint https://opentelemetry.io/docs/collector/deployment/gateway/ 
+  # or fallback to the probablistic_sampler
   tail_sampling: # https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/processor/tailsamplingprocessor#readme
     decision_wait: 30s
     num_traces: 50000
