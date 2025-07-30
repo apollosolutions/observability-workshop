@@ -73,7 +73,7 @@ processors:
   # See more about sampling concepts here: https://opentelemetry.io/docs/concepts/sampling/
   # Tail sampling for intelligent sampling decisions
   tail_sampling: # https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/processor/tailsamplingprocessor#readme
-    decision_wait: 10s
+    decision_wait: 30s
     num_traces: 50000
     policies:
       # Always Sample GraphQL errors
