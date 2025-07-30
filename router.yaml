@@ -122,9 +122,8 @@ telemetry:
         endpoint: http://localhost:4317
         protocol: grpc
     tracing:
-      propagation:
-        jaeger: false
-        datadog: true # do we need this?
+      propagation: # https://www.apollographql.com/docs/graphos/routing/observability/telemetry/trace-exporters/overview#propagation
+        trace_context: true
       common:
         sampler: 1.0 # Send all traces to collector for intelligent sampling
         resource: ## Resource attributes are used to identify the service in datadog see https://docs.datadoghq.com/opentelemetry/mapping/semantic_mapping/?tab=datadogexporter and https://opentelemetry.io/docs/specs/semconv/resource/ and https://www.apollographql.com/docs/graphos/routing/observability/telemetry/metrics-exporters/overview#resource
