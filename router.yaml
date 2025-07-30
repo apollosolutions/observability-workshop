@@ -127,7 +127,6 @@ telemetry:
         datadog: true # do we need this?
       common:
         sampler: 1.0 # Send all traces to collector for intelligent sampling
-        parent_based_sampler: true # Enable parent-based sampling
         resource: ## Resource attributes are used to identify the service in datadog see https://docs.datadoghq.com/opentelemetry/mapping/semantic_mapping/?tab=datadogexporter and https://opentelemetry.io/docs/specs/semconv/resource/ and https://www.apollographql.com/docs/graphos/routing/observability/telemetry/metrics-exporters/overview#resource
           "deployment.environment.name": "local"
           "host.name": "robertsMac"
