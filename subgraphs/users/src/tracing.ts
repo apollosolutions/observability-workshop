@@ -8,6 +8,8 @@ import {
   PeriodicExportingMetricReader,
 } from "@opentelemetry/sdk-metrics";
 import { metrics } from "@opentelemetry/api";
+import { Resource } from "@opentelemetry/resources";
+import { SemanticResourceAttributes } from "@opentelemetry/semantic-conventions";
 
 // Configure trace exporter
 const traceExporter = new OTLPTraceExporter({
@@ -29,9 +31,15 @@ meterProvider.addMetricReader(metricReader);
 
 metrics.setGlobalMeterProvider(meterProvider);
 
-// Configure SDK with just traces
+// Create resource with explicit service name
+const resource = new Resource({
+  [SemanticResourceAttributes.SERVICE_NAME]: "users",
+  [SemanticResourceAttributes.DEPLOYMENT_ENVIRONMENT]: "local",
+});
+
+// Simple NodeSDK configuration
 const sdk = new NodeSDK({
-  serviceName: "users",
+  resource: resource,
   traceExporter: traceExporter,
   instrumentations: [getNodeAutoInstrumentations()],
 });
