@@ -194,7 +194,7 @@ service:
     traces:
       receivers: [otlp]
       processors: [resourcedetection, batch]
-      exporters: [debug, otlp, datadog/connector]
+      exporters: [otlp, datadog/connector]
     traces/sampling: # https://github.com/open-telemetry/opentelemetry-collector-contrib/blob/main/exporter/datadogexporter/examples/collector.yaml#L517
       receivers: [datadog/connector]
       processors: [tail_sampling]
