@@ -3,6 +3,26 @@ supergraph:
   path: /
   listen: 0.0.0.0:4000
 
+# Coprocessor configuration, use this and coprocessor.py to log all requests to the router and throw errors 50% of the time
+# coprocessor:
+#   url: http://localhost:8081 # Coprocessor endpoint
+#   timeout: 2s
+#   router:
+#     request:
+#       headers: true # Forward all headers
+#       context: true # Forward request context
+#     response:
+#       headers: true # Forward response headers
+#       context: true # Forward response context
+#   subgraph:
+#     all: # Apply to all subgraphs
+#       request:
+#         headers: true
+#         context: true
+#       response:
+#         headers: true
+#         context: true
+
 homepage:
   enabled: false
 
