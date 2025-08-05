@@ -32,8 +32,8 @@ receivers:
       memory:
       network:
       processes:
-  # The prometheus receiver scrapes metrics needed for the OpenTelemetry Collector Dashboard.
-  prometheus/receiver:
+  # The prometheus receiver scrapes metrics needed for the OpenTelemetry Collector Dashboard. https://docs.datadoghq.com/opentelemetry/integrations/collector_health_metrics/
+  prometheus/receiver: 
     config:
       scrape_configs:
         - job_name: 'otelcol'
