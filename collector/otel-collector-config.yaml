@@ -131,19 +131,14 @@ processors:
           enabled: true
         host.cpu.cache.l2.size:
           enabled: true
-#    # GCP
-#    detectors: [ env, gcp, system ]
-#    # AWS
-#    detectors: [ env, ecs, ec2, system ]
-#    # Azure
-#    detectors: [ env, azure, system ]
-#    timeout: 2s
-#    override: false
-
-#  resourcedetection/docker:
-#    detectors: [ env, docker ]
-#    timeout: 2s
-#    override: false
+        # # GCP
+        # detectors: [ env, gcp, system ]
+        # # AWS
+        # detectors: [ env, ecs, ec2, system ]
+        # # Azure
+        # detectors: [ env, azure, system ]
+        # timeout: 2s
+        # override: false
 
 
 # Read more about exporters here:
