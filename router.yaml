@@ -43,9 +43,6 @@ telemetry:
       router:
         attributes: # attribute options https://www.apollographql.com/docs/graphos/routing/observability/telemetry/instrumentation/standard-attributes#router
           http.response.status_code: true
-          error.type: true
-          graphql.operation.name:
-            operation_name: "string"
 
       supergraph:
         attributes:
@@ -64,7 +61,6 @@ telemetry:
 
       subgraph:
         attributes:
-          subgraph.name: true
           otel.status_code:
             static: ERROR
             condition:
