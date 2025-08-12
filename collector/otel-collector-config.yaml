@@ -41,23 +41,23 @@ receivers:
           static_configs:
             - targets: [ 'localhost:8888' ]
 
-  docker_stats: # Note: doesn't work on MAC. Also, if you are using the collector image, you may need to configure additional permissions for the collector to have access to the Docker socket.  https://github.com/open-telemetry/opentelemetry-collector-contrib/issues/11791
-    endpoint: unix:///var/run/docker.sock # (default)
-    metrics:
-      container.network.io.usage.rx_packets:
-        enabled: true
-      container.network.io.usage.tx_packets:
-        enabled: true
-      container.cpu.usage.system:
-        enabled: true
-      container.memory.rss:
-        enabled: true
-      container.blockio.io_serviced_recursive:
-        enabled: true
-      container.uptime:
-        enabled: true
-      container.memory.hierarchical_memory_limit:
-        enabled: true
+  # docker_stats: # Note: doesn't work on MAC. Also, if you are using the collector image, you may need to configure additional permissions for the collector to have access to the Docker socket.  https://github.com/open-telemetry/opentelemetry-collector-contrib/issues/11791
+  #   endpoint: unix:///var/run/docker.sock # (default)
+  #   metrics:
+  #     container.network.io.usage.rx_packets:
+  #       enabled: true
+  #     container.network.io.usage.tx_packets:
+  #       enabled: true
+  #     container.cpu.usage.system:
+  #       enabled: true
+  #     container.memory.rss:
+  #       enabled: true
+  #     container.blockio.io_serviced_recursive:
+  #       enabled: true
+  #     container.uptime:
+  #       enabled: true
+  #     container.memory.hierarchical_memory_limit:
+  #       enabled: true
 
 processors:
   # The batch processor batches telemetry data into larger payloads.
@@ -197,7 +197,7 @@ service:
       processors: [tail_sampling]
       exporters: [datadog/exporter]
     metrics:
-      receivers: [hostmetrics, otlp, prometheus/receiver, datadog/connector, docker_stats]
+      receivers: [hostmetrics, otlp, prometheus/receiver, datadog/connector]
       processors: [resourcedetection, batch]
       exporters: [datadog/exporter]
 
