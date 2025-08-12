@@ -46,7 +46,6 @@ telemetry:
           operation.name: "router"
           resource.name:
             request_method: true
-          http.response.status_code: true
 
       supergraph:
         attributes:
