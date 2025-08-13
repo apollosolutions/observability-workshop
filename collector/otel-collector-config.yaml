@@ -165,7 +165,7 @@ exporters:
         send_aggregation_metrics: true
     api:
       key: ${env:DD_API_KEY} # Set your Datadog API key as an environment variable
-     # site: ${env:DD_SITE}"us5.datadoghq.com" # Use "datadoghq.eu" if you're in the EU region
+#      site: "datadoghq.eu" # Uncomment if you're in the EU region or set the DD_SITE environment variable
 extensions:
   health_check:
   zpages:
