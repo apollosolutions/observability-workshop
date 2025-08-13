@@ -88,31 +88,22 @@ telemetry:
           graphql.errors:
             subgraph_on_graphql_error: true
 
-    instruments: # production instruments example https://www.apollographql.com/docs/graphos/routing/observability/telemetry/instrumentation/instruments#production-instrumentation-example
+    instruments: # https://www.apollographql.com/docs/graphos/routing/observability/telemetry/instrumentation/instruments
       router:
-        http.server.request.duration:
+        http.server.request.duration: # https://opentelemetry.io/docs/specs/semconv/http/http-metrics/#metric-httpserverrequestduration
           attributes: 
             # This attribute will be set to true if the response contains graphql errors
             graphql.errors:
               on_graphql_error: true
-        # http.server.response.body.size: # doesnt work
-        #   attributes:
-        #     graphql.operation.name:
-        #       operation_name: string
       subgraph:
-        http.client.request.duration:
+        http.client.request.duration: # https://opentelemetry.io/docs/specs/semconv/http/http-metrics/#metric-httpclientrequestduration
           attributes:
             subgraph.name: true
             http.response.status_code:
-              subgraph_response_status: code
-            graphql.operation.name:
-              supergraph_operation_name: string
+              subgraph_response_status: code # https://www.apollographql.com/docs/graphos/routing/observability/telemetry/instrumentation/selectors#subgraph
             # This attribute will be set to true if the response contains graphql errors
             graphql.errors:
               subgraph_on_graphql_error: true
-        http.client.request.body.size:
-          attributes:
-            subgraph.name: true
 
       connector: # connector isnt part of the standard production instrumentation
         http.client.request.body.size: true
