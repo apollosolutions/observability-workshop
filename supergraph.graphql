@@ -1,7 +1,6 @@
 schema
   @link(url: "https://specs.apollo.dev/link/v1.0")
   @link(url: "https://specs.apollo.dev/join/v0.5", for: EXECUTION)
-  @link(url: "https://specs.apollo.dev/cacheTag/v0.1", for: EXECUTION)
 {
   query: Query
 }
@@ -76,7 +75,6 @@ enum link__Purpose {
 type Post
   @join__type(graph: POSTS, key: "id")
   @join__type(graph: USERS, key: "id")
-  @join__directive(graphs: [POSTS, USERS], name: "federation__cacheTag", args: {format: "post-{$key.id}"})
 {
   id: ID!
   title: String! @join__field(graph: POSTS)
@@ -89,8 +87,8 @@ type Query
   @join__type(graph: POSTS)
   @join__type(graph: USERS)
 {
-  posts: [Post!]! @join__field(graph: POSTS) @join__directive(graphs: [POSTS], name: "federation__cacheTag", args: {format: "posts"})
-  post(id: ID!): Post! @join__field(graph: POSTS) @join__directive(graphs: [POSTS], name: "federation__cacheTag", args: {format: "post-{$args.id}"})
+  posts: [Post!]! @join__field(graph: POSTS)
+  post(id: ID!): Post! @join__field(graph: POSTS)
   user(id: ID!): User @join__field(graph: USERS)
   users: [User!]! @join__field(graph: USERS)
 }
@@ -98,7 +96,6 @@ type Query
 type User
   @join__type(graph: POSTS, key: "id")
   @join__type(graph: USERS, key: "id")
-  @join__directive(graphs: [POSTS, USERS], name: "federation__cacheTag", args: {format: "user-{$key.id}"})
 {
   id: ID!
   posts: [Post!]! @join__field(graph: POSTS) @join__field(graph: USERS, external: true)

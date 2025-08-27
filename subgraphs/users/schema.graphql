@@ -16,11 +16,11 @@ extend schema
   ) on FIELD_DEFINITION | OBJECT | INTERFACE | UNION
 
 type Query {
-  user(id: ID!): User @cacheControl(maxAge: 10000)
-  users: [User!]! @cacheControl(maxAge: 10000)
+  user(id: ID!): User
+  users: [User!]!
 }
 
-type User @key(fields: "id") @cacheControl(maxAge: 10000) {
+type User @key(fields: "id") {
   id: ID!
   name: String!
   email: String!
@@ -29,7 +29,7 @@ type User @key(fields: "id") @cacheControl(maxAge: 10000) {
   posts: [Post!]! @external
 }
 
-type Address @cacheControl(maxAge: 10000) {
+type Address {
   streetAddress1: String!
   streetAddress2: String
   city: String!
@@ -38,7 +38,7 @@ type Address @cacheControl(maxAge: 10000) {
   country: String!
 }
 
-type Post @key(fields: "id") @cacheControl(maxAge: 10000) {
+type Post @key(fields: "id") {
   id: ID!
   content: String! @external
 }
