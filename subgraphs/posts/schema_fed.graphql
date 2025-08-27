@@ -1,0 +1,30 @@
+extend schema
+  @link(url: "https://specs.apollo.dev/federation/v2.12", import: ["@key", "@cacheTag"])
+
+  enum CacheControlScope {
+    PUBLIC
+    PRIVATE
+  }
+  directive @cacheControl(
+    maxAge: Int
+    scope: CacheControlScope
+    inheritMaxAge: Boolean
+  ) on FIELD_DEFINITION | OBJECT | INTERFACE | UNION
+
+type Query {
+  posts: [Post!]! @cacheControl(maxAge: 30) @cacheTag(format: "posts")
+  post(id: ID!): Post! @cacheControl(maxAge: 30) @cacheTag(format: "post-{$args.id}")
+}
+
+type User @key(fields: "id") @cacheControl(maxAge: 30) @cacheTag(format: "user-{$key.id}") {
+  id: ID!
+  posts: [Post!]!
+}
+
+type Post @key(fields: "id") @cacheControl(maxAge: 30) @cacheTag(format: "post-{$key.id}") {
+  id: ID!
+  title: String!
+  content: String!
+  author: User!
+  featuredImage: String
+}

@@ -74,7 +74,7 @@ export class PostsAPI extends RESTDataSource {
 
   // getPostsByAuthorId fetches posts using the post's author ID
   async getPostsByAuthorId(id: string) {
-    let i = await totallyComplicatedAndNecessaryLogic(320);
+    let i = "test";
 
     return formatPost(
       await this.get("post", {

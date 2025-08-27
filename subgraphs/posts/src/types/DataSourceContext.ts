@@ -1,3 +1,4 @@
+import { ServerResponse } from "http";
 import { PostsAPI } from "../datasource";
 
 //This interface is used with graphql-codegen to generate types for resolvers context

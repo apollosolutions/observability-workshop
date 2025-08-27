@@ -29,6 +29,11 @@ export type Address = {
   streetAddress2?: Maybe<Scalars['String']['output']>;
 };
 
+export enum CacheControlScope {
+  Private = 'PRIVATE',
+  Public = 'PUBLIC'
+}
+
 export type Post = {
   __typename?: 'Post';
   content: Scalars['String']['output'];
@@ -141,11 +146,13 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 export type ResolversTypes = ResolversObject<{
   Address: ResolverTypeWrapper<DeepPartial<Address>>;
   String: ResolverTypeWrapper<DeepPartial<Scalars['String']['output']>>;
+  CacheControlScope: ResolverTypeWrapper<DeepPartial<CacheControlScope>>;
   Post: ResolverTypeWrapper<DeepPartial<Post>>;
   ID: ResolverTypeWrapper<DeepPartial<Scalars['ID']['output']>>;
   Query: ResolverTypeWrapper<{}>;
   User: ResolverTypeWrapper<DeepPartial<User>>;
   Boolean: ResolverTypeWrapper<DeepPartial<Scalars['Boolean']['output']>>;
+  Int: ResolverTypeWrapper<DeepPartial<Scalars['Int']['output']>>;
 }>;
 
 /** Mapping between all available schema types and the resolvers parents */
@@ -157,7 +164,16 @@ export type ResolversParentTypes = ResolversObject<{
   Query: {};
   User: DeepPartial<User>;
   Boolean: DeepPartial<Scalars['Boolean']['output']>;
+  Int: DeepPartial<Scalars['Int']['output']>;
 }>;
+
+export type CacheControlDirectiveArgs = {
+  inheritMaxAge?: Maybe<Scalars['Boolean']['input']>;
+  maxAge?: Maybe<Scalars['Int']['input']>;
+  scope?: Maybe<CacheControlScope>;
+};
+
+export type CacheControlDirectiveResolver<Result, Parent, ContextType = DataSourceContext, Args = CacheControlDirectiveArgs> = DirectiveResolverFn<Result, Parent, ContextType, Args>;
 
 export type AddressResolvers<ContextType = DataSourceContext, ParentType extends ResolversParentTypes['Address'] = ResolversParentTypes['Address']> = ResolversObject<{
   city?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
@@ -199,3 +215,6 @@ export type Resolvers<ContextType = DataSourceContext> = ResolversObject<{
   User?: UserResolvers<ContextType>;
 }>;
 
+export type DirectiveResolvers<ContextType = DataSourceContext> = ResolversObject<{
+  cacheControl?: CacheControlDirectiveResolver<any, any, ContextType>;
+}>;

@@ -11,6 +11,7 @@ import resolvers from "./resolvers";
 import { DataSourceContext } from "./types/DataSourceContext";
 import { UsersAPI } from "./datasource";
 import { ApolloServerPluginInlineTrace } from "@apollo/server/plugin/inlineTrace";
+import { ApolloServerPluginCacheControl } from '@apollo/server/plugin/cacheControl';
 
 const port = process.env.PORT ?? "4001";
 const subgraphName = require("../package.json").name;
@@ -29,6 +30,10 @@ async function main() {
           unmodified: true,
         },
       }),
+      ApolloServerPluginCacheControl({
+            // Don't send the `cache-control` response header.
+            calculateHttpHeaders: true,
+          })
     ],
   });
   const context: ContextFunction<

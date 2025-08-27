@@ -11,6 +11,7 @@ import resolvers from "./resolvers";
 import { DataSourceContext } from "./types/DataSourceContext";
 import { PostsAPI } from "./datasource";
 import { ApolloServerPluginInlineTrace } from "@apollo/server/plugin/inlineTrace";
+import { ApolloServerPluginCacheControl } from '@apollo/server/plugin/cacheControl';
 
 const port = process.env.PORT ?? "4002";
 // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -21,7 +22,7 @@ const context: ContextFunction<
   DataSourceContext
 > = async () => {
   return {
-    postsAPI: new PostsAPI(),
+    postsAPI: new PostsAPI()
   };
 };
 
@@ -39,6 +40,10 @@ async function main() {
           unmodified: true,
         },
       }),
+      ApolloServerPluginCacheControl({
+            // Don't send the `cache-control` response header.
+            calculateHttpHeaders: true,
+          })
     ],
   });
   const { url } = await startStandaloneServer(server, {

@@ -1,5 +1,5 @@
-set -a            
+set -a
 source .env
 set +a
 
-./router --config router.yaml --hr
+/Users/bnj/rust/router/target/release/router --config router.yaml --supergraph supergraph.graphql --hr

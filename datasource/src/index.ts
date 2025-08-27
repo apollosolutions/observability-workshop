@@ -6,11 +6,14 @@ import {
   ResponseBody,
   sleep,
   PostRequestQuery,
+  CommentRequestQuery,
 } from "./util";
 import { FAKE_POST } from "./posts";
 import { FAKE_USER, UserAddressRestResponse } from "./users";
 import { find, omit } from "lodash";
 import { FAKE_POSTS, FAKE_USERS } from "./mocked_data";
+import { FAKE_COMMENT } from "./comments";
+import { loremIpsum } from "lorem-ipsum";
 
 const PORT = 3030;
 const app = express();
@@ -23,7 +26,7 @@ app.get(
     req: Request<RequestParams, ResponseBody, RequestBody, UserRequestQuery>,
     res: Response
   ) => {
-    await sleep(500);
+    await sleep(50);
     let params: string[] = [];
     if (!req.query.id) {
       res.sendStatus(400);
@@ -55,7 +58,7 @@ app.get(
     req: Request<RequestParams, ResponseBody, RequestBody, UserRequestQuery>,
     res: Response
   ) => {
-    await sleep(1000);
+    await sleep(10);
     let params: string[] = [];
     if (!req.query.id) {
       res.sendStatus(400);
@@ -89,7 +92,7 @@ app.get(
     req: Request<RequestParams, ResponseBody, RequestBody, PostRequestQuery>,
     res: Response
   ) => {
-    await sleep(500);
+    await sleep(50);
     let posts: FAKE_POST[] = [];
 
     if (!req.query.id && !req.query.authorId) {
@@ -136,6 +139,40 @@ app.get(
     }
 
     res.json({ data: posts });
+  }
+);
+
+app.get(
+  "/comment",
+  async (
+    req: Request<RequestParams, ResponseBody, RequestBody, CommentRequestQuery>,
+    res: Response
+  ) => {
+    await sleep(500);
+    let comments: FAKE_COMMENT[] = [];
+
+    if (!req.query.post_id) {
+      console.log("no query params");
+      res.sendStatus(400);
+      return;
+    }
+    let idParams: string[] = [];
+    if (typeof req.query.post_id === "string") {
+      idParams.push(req.query.post_id);
+    } else if (req.query.post_id instanceof Array) {
+      idParams = req.query.post_id;
+    }
+
+    for (let post of idParams) {
+      comments.push({
+          id: require("crypto").randomBytes(64).toString('hex'),
+          post_id: post,
+          content: loremIpsum(),
+          author: Math.floor(Math.random() * 999)
+      })
+    }
+    res.header("cache-control", "public,max-age=30");
+    res.json(comments);
   }
 );
 

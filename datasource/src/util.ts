@@ -11,6 +11,9 @@ export interface PostRequestQuery {
     id: string | Array<string> | undefined;
     authorId: string | Array<string> | undefined;
 }
+export interface CommentRequestQuery {
+    post_id: string | Array<string> | undefined;
+}
 export const sleep = (ms: number): Promise<void> => {
     return new Promise(resolve => setTimeout(resolve, ms));
 }

@@ -8,6 +8,28 @@ homepage:
 
 sandbox:
   enabled: true
+connectors:
+  preview_connect_v0_3: true
+  debug_extensions: true
+cors:
+  # Set to false to disallow any origin and rely exclusively on `origins`
+  # Defaults to true
+  allow_any_origin: true
+experimental_response_cache:
+  enabled: true
+  debug: true
+  invalidation:
+    listen: 0.0.0.0:4000
+    path: /invalidation
+  subgraph:
+    all:
+      enabled: true
+      postgres:
+        url: "postgres://localhost:5432"
+      ttl: 30s # overrides the global TTL
+      invalidation:
+        enabled: true
+        shared_key: "invalidate"
 
 telemetry:
   apollo:
@@ -18,6 +40,22 @@ telemetry:
           redact: false
           send: true
   instrumentation:
+    instruments:
+      router:
+        http.server.request.duration:
+          attributes:
+            http.response.status_code: true
+            graphql.operation.name:
+              operation_name: string
+      subgraph:
+        http.client.request.duration:
+          attributes:
+            subgraph.name: true
+            http.response.status_code:
+              subgraph_response_status: code
+            # response.cache.hit:
+            #   response_cache: hit
+
     spans:
       mode: spec_compliant
       router:
@@ -34,17 +72,6 @@ telemetry:
       common:
         service_name: router
         service_namespace: observability-workshop
-        attributes:
-          supergraph:
-            context:
-              - named: has_errors
-          subgraph:
-            all:
-              errors:
-                include_messages: true
-                extensions:
-                  - name: error_code
-                    path: .code
     tracing:
       propagation:
         jaeger: true
