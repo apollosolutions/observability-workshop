@@ -171,7 +171,7 @@ app.get(
           author: Math.floor(Math.random() * 999)
       })
     }
-    res.header("cache-control", "public,max-age=30");
+    res.header("cache-control", "public,max-age=20");
     res.json(comments);
   }
 );
