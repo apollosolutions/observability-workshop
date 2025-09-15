@@ -21,7 +21,10 @@ type Post @key(fields: "id") @cacheTag(format: "post-{$key.id}") {
     comments: [Comment!]
         @connect(
             source: "comment"
-            http: { GET: "/comment?post_id={$this.id}" }
+            http: {
+                GET: "/comment?post_id={$this.id}"
+                headers: [{ name: "Cache-Control", from: "Cache-Control" }]
+            }
             selection: """
             id
             post_id

@@ -16,12 +16,12 @@ type Query {
   post(id: ID!): Post
 }
 
-type User @key(fields: "id") {
+type User @key(fields: "id") @cacheControl(maxAge: 10) {
   id: ID!
   posts: [Post!]!
 }
 
-type Post @key(fields: "id") {
+type Post @key(fields: "id") @cacheControl(maxAge: 10) {
   id: ID!
   title: String!
   content: String!

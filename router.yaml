@@ -26,10 +26,10 @@ experimental_response_cache:
       enabled: true
       postgres:
         url: "postgres://localhost:5432"
-      ttl: 30s # overrides the global TTL
+        # pool_size: 7
       invalidation:
         enabled: true
-        shared_key: "invalidate"
+        shared_key: ${env.INVALIDATION_SHARED_KEY}
 
 telemetry:
   apollo:
@@ -40,7 +40,28 @@ telemetry:
           redact: false
           send: true
   instrumentation:
+    # events:
+    #   subgraph:
+    #     response:
+    #       level: info
+    #       condition:
+    #         all:
+    #           - eq:
+    #               - subgraph_name: true
+    #               - static: posts
+    #           - eq:
+    #               - response_cache: hit
+    #               - 0
     instruments:
+      cache: # Cache instruments configuration
+        apollo.router.operations.response.cache: # A counter which counts the number of cache hit and miss for subgraph requests
+          attributes:
+            graphql.type.name: true # Include the entity type name. default: false
+            subgraph.name: # Custom attributes to include the subgraph name in the metric
+              subgraph_name: true
+            supergraph.operation.name: # Add custom attribute to display the supergraph operation name
+              supergraph_operation_name: string
+      # You can add more custom attributes using subgraph selectors
       router:
         http.server.request.duration:
           attributes:
@@ -53,8 +74,10 @@ telemetry:
             subgraph.name: true
             http.response.status_code:
               subgraph_response_status: code
-            # response.cache.hit:
-            #   response_cache: hit
+            response.cache.hit:
+              response_cache: hit
+            response.cache.status:
+              response_cache_status: status
 
     spans:
       mode: spec_compliant
@@ -72,6 +95,24 @@ telemetry:
       common:
         service_name: router
         service_namespace: observability-workshop
+        views:
+          - name: apollo.router.operations.response_cache.cache_hit
+            aggregation:
+              histogram:
+                buckets:
+                  - 25.0
+                  - 50.0
+                  - 75.0
+                  - 100.0
+          - name: apollo.router.operations.response_cache.fetch.entity
+            aggregation:
+              histogram:
+                buckets:
+                  - 5
+                  - 10
+                  - 50
+                  - 100
+                  - 500
     tracing:
       propagation:
         jaeger: true
@@ -87,6 +128,12 @@ telemetry:
 include_subgraph_errors:
   all: true
 rhai: {}
+
+headers:
+  all:
+    request:
+      - propagate:
+          named: cache-control
 
 plugins:
   experimental.expose_query_plan: true

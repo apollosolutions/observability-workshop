@@ -27,6 +27,7 @@ To be able to run the workshop, you will need:
 - An enterprise Apollo Graph Ref and Apollo Key
   - An enterprise trial is sufficient: [https://studio.apollographql.com/signup?type=enterprise-trial](https://bit.ly/studio-trial)
   - If you are signed in to your existing Studio account, please sign out before registering
+- Set the right router binary in `router.sh` script file !!!
 
 ### MacOS & Linux (incl. WSL)
 

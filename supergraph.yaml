@@ -8,7 +8,7 @@ subgraphs:
     routing_url: http://localhost:4001
     schema:
       file: ./subgraphs/users/schema_fed.graphql
-  # comments:
-  #   routing_url: http://comments
-  #   schema:
-  #     file: ./subgraphs/comments.graphql
+  comments:
+    routing_url: http://comments
+    schema:
+      file: ./subgraphs/comments.graphql

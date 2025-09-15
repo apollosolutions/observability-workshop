@@ -20,7 +20,7 @@ type Query {
   users: [User!]!
 }
 
-type User @key(fields: "id") {
+type User @key(fields: "id") @cacheControl(maxAge: 10) {
   id: ID!
   name: String!
   email: String!
