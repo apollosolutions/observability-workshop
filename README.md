@@ -83,7 +83,7 @@ And for the observability tooling:
 
 ## Running the stack
 
-Before running, there's one final step you'll need to take. You'll need to populate the `.env.sample` with an Apollo key and graphref as noted during the presentation. Once you've filled it out, rename it to just `.env`. Once you've done this, you'll need to then run `publish.sh` to publish the schema to Apollo Studio.
+Before running, there's one final step you'll need to take. You'll need to populate the `.env.sample` with an Apollo key and graphref as noted during the presentation. Once you've filled it out, rename it to just `.env`. (This next step is optional as the supergraph is already part of this project `supergraph.graphql`) Once you've done this, you'll need to then run `publish.sh` to publish the schema to Apollo Studio.
 
 ### MacOS & Linux (incl. WSL)
 
@@ -115,6 +115,27 @@ Using the singular command is preferable since it will run these all in parallel
 
 </details>
 
+### Query example and check caching is working properly
+
++ Open the sandbox using [http://localhost:4000/](http://localhost:4000/)
++ Execute this example query:
+
+```graphql
+query Posts {
+  posts {
+    author {
+      email
+      name
+    }
+    title
+  }
+}
+```
+
++ It should request both subgraph `posts` and `users`.
++ You should be able to execute it several times and notice a significant decrease in latency measured on Apollo Sandbox (top right).
++ If you click on the dropdown `Response` just above the response data you should be able to see `Cache Debugger` in the list. You can select it and make sure things are coming either from cache or subgraph depending on TTLs you set in `@cacheControl` directive in [`./subgraphs/posts/schema.graphql`](./subgraphs/posts/schema.graphql) and [`./subgraphs/users/schema.graphql`](./subgraphs/users/schema.graphql).
+
 ## Tasks
 
 ### Important
@@ -136,7 +157,7 @@ We've included a number of issues within the code, and while you're likely to fi
 
 There are a few other areas to investigate to improve, but these are just a few start points. Note what you've done and we'll discuss the listed three during the specific section.
 
-### What should I do?
+### What should I do? (Only to create metrics and traffic)
 
 As mentioned above, this workshop consists of debugging and resolving issues within a poorly performing federated graph. When trying to resolve these issues, you can debug using this flow:
 
