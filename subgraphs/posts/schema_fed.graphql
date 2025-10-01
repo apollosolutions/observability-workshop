@@ -12,7 +12,7 @@ extend schema
   ) on FIELD_DEFINITION | OBJECT | INTERFACE | UNION
 
 type Query {
-  posts: [Post!]! @cacheTag(format: "posts")
+  posts: [Post!]!
   post(id: ID!): Post!
 }
 
@@ -21,7 +21,7 @@ type User @key(fields: "id") {
   posts: [Post!]!
 }
 
-type Post @key(fields: "id") @cacheTag(format: "post-{$key.id}") @cacheTag(format: "post") {
+type Post @key(fields: "id") {
   id: ID!
   title: String!
   content: String!

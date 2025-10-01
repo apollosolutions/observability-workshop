@@ -90,8 +90,7 @@ type Post
   @join__type(graph: COMMENTS, key: "id")
   @join__type(graph: POSTS, key: "id")
   @join__type(graph: USERS, key: "id")
-  @join__directive(graphs: [COMMENTS, POSTS], name: "federation__cacheTag", args: {format: "post-{$key.id}"})
-  @join__directive(graphs: [POSTS], name: "federation__cacheTag", args: {format: "post"})
+  @join__directive(graphs: [COMMENTS], name: "federation__cacheTag", args: {format: "post-{$key.id}"})
 {
   id: ID!
   comments: [Comment!] @join__field(graph: COMMENTS) @join__directive(graphs: [COMMENTS], name: "connect", args: {source: "comment", http: {GET: "/comment?post_id={$this.id}", headers: [{name: "Cache-Control", from: "Cache-Control"}]}, selection: "id\npost_id\ncontent\nauthor"})
@@ -106,7 +105,7 @@ type Query
   @join__type(graph: POSTS)
   @join__type(graph: USERS)
 {
-  posts: [Post!]! @join__field(graph: POSTS) @join__directive(graphs: [POSTS], name: "federation__cacheTag", args: {format: "posts"})
+  posts: [Post!]! @join__field(graph: POSTS)
   post(id: ID!): Post! @join__field(graph: POSTS)
   user(id: ID!): User @join__field(graph: USERS)
   users: [User!]! @join__field(graph: USERS)
@@ -115,7 +114,6 @@ type Query
 type User
   @join__type(graph: POSTS, key: "id")
   @join__type(graph: USERS, key: "id")
-  @join__directive(graphs: [USERS], name: "federation__cacheTag", args: {format: "post-{$key.id}"})
 {
   id: ID!
   posts: [Post!]! @join__field(graph: POSTS) @join__field(graph: USERS, external: true)

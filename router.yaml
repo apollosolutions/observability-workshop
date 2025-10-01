@@ -15,7 +15,7 @@ cors:
   # Set to false to disallow any origin and rely exclusively on `origins`
   # Defaults to true
   allow_any_origin: true
-experimental_response_cache:
+preview_response_cache:
   enabled: true
   debug: true
   invalidation:

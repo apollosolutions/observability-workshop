@@ -20,7 +20,7 @@ type Query {
   users: [User!]!
 }
 
-type User @key(fields: "id") @cacheTag(format: "post-{$key.id}") {
+type User @key(fields: "id") {
   id: ID!
   name: String!
   email: String!

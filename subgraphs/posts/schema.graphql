@@ -12,16 +12,16 @@ extend schema
   ) on FIELD_DEFINITION | OBJECT | INTERFACE | UNION
 
 type Query {
-  posts: [Post!] @cacheControl(maxAge: 60)
+  posts: [Post!]
   post(id: ID!): Post
 }
 
-type User @key(fields: "id") @cacheControl(maxAge: 60) {
+type User @key(fields: "id") {
   id: ID!
   posts: [Post!]!
 }
 
-type Post @key(fields: "id") @cacheControl(maxAge: 60) {
+type Post @key(fields: "id") {
   id: ID!
   title: String!
   content: String!
