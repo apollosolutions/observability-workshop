@@ -106,6 +106,7 @@ type Query
   @join__type(graph: USERS)
 {
   posts: [Post!]! @join__field(graph: POSTS)
+  topPosts: [Post!] @join__field(graph: POSTS)
   post(id: ID!): Post! @join__field(graph: POSTS)
   user(id: ID!): User @join__field(graph: USERS)
   users: [User!]! @join__field(graph: USERS)

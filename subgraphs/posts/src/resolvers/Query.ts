@@ -9,6 +9,10 @@ export const Query: Resolvers = {
       }
       return await postsAPI.getPosts(ids);
     },
+    topPosts: async (_parent, _, { postsAPI }) => {
+      const ids: string[] = ["1", "2", "3", "4"];
+      return await postsAPI.getPosts(ids);
+    },
     post: async (_, { id }, { postsAPI }) => {
       return await postsAPI.getPost(id);
     },

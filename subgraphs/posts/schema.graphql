@@ -13,6 +13,7 @@ extend schema
 
 type Query {
   posts: [Post!]
+  topPosts: [Post!]
   post(id: ID!): Post
 }
 
