@@ -26,7 +26,7 @@ app.get(
     req: Request<RequestParams, ResponseBody, RequestBody, UserRequestQuery>,
     res: Response
   ) => {
-    await sleep(50);
+    await sleep(150);
     let params: string[] = [];
     if (!req.query.id) {
       res.sendStatus(400);
