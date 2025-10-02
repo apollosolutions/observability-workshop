@@ -1,7 +1,6 @@
 schema
   @link(url: "https://specs.apollo.dev/link/v1.0")
   @link(url: "https://specs.apollo.dev/join/v0.5", for: EXECUTION)
-  @link(url: "https://specs.apollo.dev/cacheTag/v0.1", for: EXECUTION)
 {
   query: Query
 }
@@ -98,7 +97,6 @@ type Query
 type User
   @join__type(graph: POSTS, key: "id")
   @join__type(graph: USERS, key: "id")
-  @join__directive(graphs: [USERS], name: "federation__cacheTag", args: {format: "user-{$key.id}"})
 {
   id: ID!
   posts: [Post!]! @join__field(graph: POSTS) @join__field(graph: USERS, external: true)

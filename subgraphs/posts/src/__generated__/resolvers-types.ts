@@ -35,8 +35,8 @@ export type Post = {
 
 export type Query = {
   __typename?: 'Query';
-  post: Post;
-  posts: Array<Post>;
+  post?: Maybe<Post>;
+  posts?: Maybe<Array<Post>>;
   topPosts?: Maybe<Array<Post>>;
 };
 
@@ -174,8 +174,8 @@ export type PostResolvers<ContextType = DataSourceContext, ParentType extends Re
 }>;
 
 export type QueryResolvers<ContextType = DataSourceContext, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = ResolversObject<{
-  post?: Resolver<ResolversTypes['Post'], ParentType, ContextType, RequireFields<QueryPostArgs, 'id'>>;
-  posts?: Resolver<Array<ResolversTypes['Post']>, ParentType, ContextType>;
+  post?: Resolver<Maybe<ResolversTypes['Post']>, ParentType, ContextType, RequireFields<QueryPostArgs, 'id'>>;
+  posts?: Resolver<Maybe<Array<ResolversTypes['Post']>>, ParentType, ContextType>;
   topPosts?: Resolver<Maybe<Array<ResolversTypes['Post']>>, ParentType, ContextType>;
 }>;
 
