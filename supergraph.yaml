@@ -1,14 +1,14 @@
-federation_version: =2.12.0-bnj
+federation_version: =2.12.0-preview.8
 subgraphs:
   posts:
     routing_url: http://localhost:4002
     schema:
-      file: ./subgraphs/posts/schema_fed.graphql
+      file: ./subgraphs/posts/schema.graphql
   users:
     routing_url: http://localhost:4001
     schema:
-      file: ./subgraphs/users/schema_fed.graphql
-  comments:
-    routing_url: http://comments
-    schema:
-      file: ./subgraphs/comments.graphql
+      file: ./subgraphs/users/schema.graphql
+  # comments:
+  # routing_url: http://comments
+  # schema:
+  #   file: ./subgraphs/comments.graphql
