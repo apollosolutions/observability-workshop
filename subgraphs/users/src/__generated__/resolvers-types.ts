@@ -34,6 +34,17 @@ export enum CacheControlScope {
   Public = 'PUBLIC'
 }
 
+export type Mutation = {
+  __typename?: 'Mutation';
+  updateUserEmail?: Maybe<User>;
+};
+
+
+export type MutationUpdateUserEmailArgs = {
+  email: Scalars['String']['input'];
+  userId: Scalars['ID']['input'];
+};
+
 export type Post = {
   __typename?: 'Post';
   content: Scalars['String']['output'];
@@ -147,8 +158,9 @@ export type ResolversTypes = ResolversObject<{
   Address: ResolverTypeWrapper<DeepPartial<Address>>;
   String: ResolverTypeWrapper<DeepPartial<Scalars['String']['output']>>;
   CacheControlScope: ResolverTypeWrapper<DeepPartial<CacheControlScope>>;
-  Post: ResolverTypeWrapper<DeepPartial<Post>>;
+  Mutation: ResolverTypeWrapper<{}>;
   ID: ResolverTypeWrapper<DeepPartial<Scalars['ID']['output']>>;
+  Post: ResolverTypeWrapper<DeepPartial<Post>>;
   Query: ResolverTypeWrapper<{}>;
   User: ResolverTypeWrapper<DeepPartial<User>>;
   Boolean: ResolverTypeWrapper<DeepPartial<Scalars['Boolean']['output']>>;
@@ -159,8 +171,9 @@ export type ResolversTypes = ResolversObject<{
 export type ResolversParentTypes = ResolversObject<{
   Address: DeepPartial<Address>;
   String: DeepPartial<Scalars['String']['output']>;
-  Post: DeepPartial<Post>;
+  Mutation: {};
   ID: DeepPartial<Scalars['ID']['output']>;
+  Post: DeepPartial<Post>;
   Query: {};
   User: DeepPartial<User>;
   Boolean: DeepPartial<Scalars['Boolean']['output']>;
@@ -183,6 +196,10 @@ export type AddressResolvers<ContextType = DataSourceContext, ParentType extends
   streetAddress1?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   streetAddress2?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export type MutationResolvers<ContextType = DataSourceContext, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = ResolversObject<{
+  updateUserEmail?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<MutationUpdateUserEmailArgs, 'email' | 'userId'>>;
 }>;
 
 export type PostResolvers<ContextType = DataSourceContext, ParentType extends ResolversParentTypes['Post'] = ResolversParentTypes['Post']> = ResolversObject<{
@@ -210,6 +227,7 @@ export type UserResolvers<ContextType = DataSourceContext, ParentType extends Re
 
 export type Resolvers<ContextType = DataSourceContext> = ResolversObject<{
   Address?: AddressResolvers<ContextType>;
+  Mutation?: MutationResolvers<ContextType>;
   Post?: PostResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
   User?: UserResolvers<ContextType>;

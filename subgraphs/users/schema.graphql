@@ -5,22 +5,26 @@ extend schema
   )
 
 
-  enum CacheControlScope {
-    PUBLIC
-    PRIVATE
-  }
-  directive @cacheControl(
-    maxAge: Int
-    scope: CacheControlScope
-    inheritMaxAge: Boolean
-  ) on FIELD_DEFINITION | OBJECT | INTERFACE | UNION
+enum CacheControlScope {
+  PUBLIC
+  PRIVATE
+}
+directive @cacheControl(
+  maxAge: Int
+  scope: CacheControlScope
+  inheritMaxAge: Boolean
+) on FIELD_DEFINITION | OBJECT | INTERFACE | UNION
 
 type Query {
   user(id: ID!): User
-  users: [User!]!
+  users: [User!]! @cacheTag(format: "homepage")
 }
 
-type User @key(fields: "id") {
+type Mutation {
+    updateUserEmail(userId: ID!, email: String!): User
+}
+
+type User @key(fields: "id") @cacheControl(maxAge: 3600) @cacheTag(format: "user-{$key.id}") @cacheTag(format: "homepage") {
   id: ID!
   name: String!
   email: String!
