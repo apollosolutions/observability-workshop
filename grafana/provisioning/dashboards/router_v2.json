@@ -24,7 +24,6 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 2,
-  "id": 4,
   "links": [],
   "liveNow": false,
   "panels": [
@@ -1123,7 +1122,7 @@
           },
           "disableTextWrap": false,
           "editorMode": "code",
-          "expr": "sum by(subgraph_name, graphql_type_name) (rate(apollo_router_operations_response_cache_total{cache_hit=\"true\"}[$__rate_interval]))",
+          "expr": "sum by(subgraph_name, graphql_type_name) (rate(apollo_router_response_cache_total{cache_hit=\"true\"}[$__rate_interval]))",
           "fullMetaSearch": false,
           "includeNullMetadata": true,
           "instant": false,
@@ -1222,7 +1221,7 @@
           },
           "disableTextWrap": false,
           "editorMode": "code",
-          "expr": "sum by(subgraph_name, graphql_type_name) (rate(apollo_router_operations_response_cache_total{cache_hit=\"false\"}[$__rate_interval]))",
+          "expr": "sum by(subgraph_name, graphql_type_name) (rate(apollo_router_response_cache_total{cache_hit=\"false\"}[$__rate_interval]))",
           "fullMetaSearch": false,
           "hide": false,
           "includeNullMetadata": true,
@@ -2592,7 +2591,7 @@
     ]
   },
   "time": {
-    "from": "now-5m",
+    "from": "now-30m",
     "to": "now"
   },
   "timepicker": {
@@ -2601,6 +2600,6 @@
   "timezone": "",
   "title": "Sample Router v2 Dashboard for Prometheus",
   "uid": "kw3gsro4zr",
-  "version": 58,
+  "version": 61,
   "weekStart": ""
 }

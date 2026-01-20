@@ -17,14 +17,14 @@ directive @cacheControl(
 
 type Query {
   user(id: ID!): User
-  users: [User!]! @cacheTag(format: "homepage")
+  users: [User!]!
 }
 
 type Mutation {
-    updateUserEmail(userId: ID!, email: String!): User
+    updateUserEmail(userId: ID!, email: String!): User # @cacheInvalidation(cacheTag: "user-{$args.userId}")
 }
 
-type User @key(fields: "id") @cacheControl(maxAge: 3600) @cacheTag(format: "user-{$key.id}") @cacheTag(format: "homepage") {
+type User @key(fields: "id") @cacheControl(maxAge: 20, scope: PRIVATE) @cacheTag(format: "user-{$key.id}") {
   id: ID!
   name: String!
   email: String!
@@ -46,3 +46,5 @@ type Post @key(fields: "id") {
   id: ID!
   content: String! @external
 }
+
+directive @cacheInvalidation(cacheTag: String, type: String) repeatable on FIELD_DEFINITION

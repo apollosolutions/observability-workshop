@@ -17,18 +17,23 @@ cors:
   allow_any_origin: true
 preview_response_cache:
   enabled: true
-  debug: true
+  debug: true # Needs apollo-cache-debugging header set to "true"
   invalidation:
     listen: 0.0.0.0:4000
     path: /invalidation
   subgraph:
     all:
       enabled: true
-      redis:
-        urls: ["redis://localhost:6379"]
+      ttl: 10s
       invalidation:
         enabled: true
         shared_key: ${env.INVALIDATION_SHARED_KEY}
+      redis:
+        urls: ["redis://localhost:6379"]
+    subgraphs:
+      users:
+        enabled: true
+        private_id: "user_id" # context key
 
 telemetry:
   apollo:
@@ -41,16 +46,8 @@ telemetry:
   instrumentation:
     # events:
     #   subgraph:
-    #     response:
-    #       level: info
-    #       condition:
-    #         all:
-    #           - eq:
-    #               - subgraph_name: true
-    #               - static: posts
-    #           - eq:
-    #               - response_cache: hit
-    #               - 0
+    #     request: info
+    #     response: info
     instruments:
       cache: # Cache instruments configuration
         apollo.router.operations.response.cache: # A counter which counts the number of cache hit and miss for subgraph requests
@@ -77,6 +74,12 @@ telemetry:
               response_cache: hit
             response.cache.status:
               response_cache_status: status
+        subgraph.response.cache_control.max_age:
+          value:
+            response_cache_control: max_age
+          type: histogram
+          unit: s # Seconds
+          description: A histogram of the computed TTL for a subgraph response
 
     spans:
       mode: spec_compliant
@@ -112,6 +115,15 @@ telemetry:
                   - 50
                   - 100
                   - 500
+          - name: subgraph.response.cache_control.max_age # This is to make sure it will use the correct buckets for the max age histogram
+            aggregation:
+              histogram:
+                buckets: # Override default buckets configured for this histogram
+                  - 10
+                  - 100
+                  - 1000
+                  - 10000
+                  - 100000
     tracing:
       propagation:
         jaeger: true

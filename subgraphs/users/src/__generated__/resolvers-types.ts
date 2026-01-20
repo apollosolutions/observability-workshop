@@ -188,6 +188,13 @@ export type CacheControlDirectiveArgs = {
 
 export type CacheControlDirectiveResolver<Result, Parent, ContextType = DataSourceContext, Args = CacheControlDirectiveArgs> = DirectiveResolverFn<Result, Parent, ContextType, Args>;
 
+export type CacheInvalidationDirectiveArgs = {
+  cacheTag?: Maybe<Scalars['String']['input']>;
+  type?: Maybe<Scalars['String']['input']>;
+};
+
+export type CacheInvalidationDirectiveResolver<Result, Parent, ContextType = DataSourceContext, Args = CacheInvalidationDirectiveArgs> = DirectiveResolverFn<Result, Parent, ContextType, Args>;
+
 export type AddressResolvers<ContextType = DataSourceContext, ParentType extends ResolversParentTypes['Address'] = ResolversParentTypes['Address']> = ResolversObject<{
   city?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   country?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
@@ -235,4 +242,5 @@ export type Resolvers<ContextType = DataSourceContext> = ResolversObject<{
 
 export type DirectiveResolvers<ContextType = DataSourceContext> = ResolversObject<{
   cacheControl?: CacheControlDirectiveResolver<any, any, ContextType>;
+  cacheInvalidation?: CacheInvalidationDirectiveResolver<any, any, ContextType>;
 }>;

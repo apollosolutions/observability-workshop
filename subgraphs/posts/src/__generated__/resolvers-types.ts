@@ -33,15 +33,31 @@ export type Post = {
   title: Scalars['String']['output'];
 };
 
+export type PostTest = {
+  __typename?: 'PostTest';
+  post?: Maybe<Post>;
+};
+
+
+export type PostTestPostArgs = {
+  id: Scalars['ID']['input'];
+};
+
 export type Query = {
   __typename?: 'Query';
   post?: Maybe<Post>;
+  postTest?: Maybe<PostTest>;
   posts?: Maybe<Array<Post>>;
   topPosts?: Maybe<Array<Post>>;
 };
 
 
 export type QueryPostArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+export type QueryPostTestArgs = {
   id: Scalars['ID']['input'];
 };
 
@@ -138,6 +154,7 @@ export type ResolversTypes = ResolversObject<{
   Post: ResolverTypeWrapper<DeepPartial<Post>>;
   String: ResolverTypeWrapper<DeepPartial<Scalars['String']['output']>>;
   ID: ResolverTypeWrapper<DeepPartial<Scalars['ID']['output']>>;
+  PostTest: ResolverTypeWrapper<DeepPartial<PostTest>>;
   Query: ResolverTypeWrapper<{}>;
   User: ResolverTypeWrapper<DeepPartial<User>>;
   Boolean: ResolverTypeWrapper<DeepPartial<Scalars['Boolean']['output']>>;
@@ -149,6 +166,7 @@ export type ResolversParentTypes = ResolversObject<{
   Post: DeepPartial<Post>;
   String: DeepPartial<Scalars['String']['output']>;
   ID: DeepPartial<Scalars['ID']['output']>;
+  PostTest: DeepPartial<PostTest>;
   Query: {};
   User: DeepPartial<User>;
   Boolean: DeepPartial<Scalars['Boolean']['output']>;
@@ -173,8 +191,14 @@ export type PostResolvers<ContextType = DataSourceContext, ParentType extends Re
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
+export type PostTestResolvers<ContextType = DataSourceContext, ParentType extends ResolversParentTypes['PostTest'] = ResolversParentTypes['PostTest']> = ResolversObject<{
+  post?: Resolver<Maybe<ResolversTypes['Post']>, ParentType, ContextType, RequireFields<PostTestPostArgs, 'id'>>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
 export type QueryResolvers<ContextType = DataSourceContext, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = ResolversObject<{
   post?: Resolver<Maybe<ResolversTypes['Post']>, ParentType, ContextType, RequireFields<QueryPostArgs, 'id'>>;
+  postTest?: Resolver<Maybe<ResolversTypes['PostTest']>, ParentType, ContextType, RequireFields<QueryPostTestArgs, 'id'>>;
   posts?: Resolver<Maybe<Array<ResolversTypes['Post']>>, ParentType, ContextType>;
   topPosts?: Resolver<Maybe<Array<ResolversTypes['Post']>>, ParentType, ContextType>;
 }>;
@@ -188,6 +212,7 @@ export type UserResolvers<ContextType = DataSourceContext, ParentType extends Re
 
 export type Resolvers<ContextType = DataSourceContext> = ResolversObject<{
   Post?: PostResolvers<ContextType>;
+  PostTest?: PostTestResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
   User?: UserResolvers<ContextType>;
 }>;

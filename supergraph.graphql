@@ -104,13 +104,8 @@ type Mutation @join__type(graph: USERS) {
         @join__directive(
             graphs: [USERS]
             name: "federation__cacheInvalidation"
-            args: { cacheTag: "user-{$args.userId}" }
+            args: { cacheTag: "user-{$args.userId}", async: false }
         )
-    # @join__directive(
-    #     graphs: [USERS]
-    #     name: "federation__cacheInvalidation"
-    #     args: { type: "User" }
-    # )
 }
 
 type Post
@@ -125,18 +120,23 @@ type Post
     featuredImage: String @join__field(graph: POSTS)
 }
 
+type PostTest @join__type(graph: POSTS) {
+    post(id: ID!): Post
+}
+
 type Query @join__type(graph: POSTS) @join__type(graph: USERS) {
     posts: [Post!] @join__field(graph: POSTS)
     topPosts: [Post!] @join__field(graph: POSTS)
     post(id: ID!): Post @join__field(graph: POSTS)
-    user(id: ID!): User @join__field(graph: USERS)
-    users: [User!]!
-        @join__field(graph: USERS)
+    postTest(id: ID!): PostTest
+        @join__field(graph: POSTS)
         @join__directive(
-            graphs: [USERS]
+            graphs: [POSTS]
             name: "federation__cacheTag"
-            args: { format: "homepage" }
+            args: { format: "post-{$args.id}" }
         )
+    user(id: ID!): User @join__field(graph: USERS)
+    users: [User!]! @join__field(graph: USERS)
 }
 
 type User
@@ -146,11 +146,6 @@ type User
         graphs: [USERS]
         name: "federation__cacheTag"
         args: { format: "user-{$key.id}" }
-    )
-    @join__directive(
-        graphs: [USERS]
-        name: "federation__cacheTag"
-        args: { format: "homepage" }
     ) {
     id: ID!
     posts: [Post!]!

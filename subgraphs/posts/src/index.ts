@@ -22,7 +22,8 @@ const context: ContextFunction<
   DataSourceContext
 > = async () => {
   return {
-    postsAPI: new PostsAPI()
+    postsAPI: new PostsAPI(),
+    cacheTags: [],
   };
 };
 
@@ -35,15 +36,33 @@ async function main() {
   const server = new ApolloServer({
     schema: buildSubgraphSchema({ typeDefs, resolvers }),
     plugins: [
+      {
+        async requestDidStart(requestContext) {
+          return {
+            async willSendResponse({ response, contextValue }) {
+              const context = contextValue as DataSourceContext;
+              // Add cache tags to the response's extensions
+              if (
+                context.cacheTags &&
+                context.cacheTags.length > 0 &&
+                response.body.kind === "single"
+              ) {
+                response.body.singleResult.extensions = {
+                  apolloCacheTags: context.cacheTags,
+                };
+              }
+            },
+          };
+        },
+      },
       ApolloServerPluginInlineTrace({
         includeErrors: {
           unmodified: true,
         },
       }),
       ApolloServerPluginCacheControl({
-            // Don't send the `cache-control` response header.
-            calculateHttpHeaders: true,
-          })
+        calculateHttpHeaders: true,
+      })
     ],
   });
   const { url } = await startStandaloneServer(server, {

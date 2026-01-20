@@ -15,6 +15,11 @@ type Query {
   posts: [Post!]
   topPosts: [Post!]
   post(id: ID!): Post
+  postTest(id: ID!): PostTest @cacheTag(format: "post-{$args.id}")
+}
+
+type PostTest @cacheControl(maxAge: 60) {
+    post(id: ID!): Post
 }
 
 type User @key(fields: "id") {

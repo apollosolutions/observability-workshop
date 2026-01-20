@@ -3,3 +3,10 @@ curl --request POST \
     --header 'content-type: application/json' \
     --url http://localhost:4000/invalidation \
     --data '[{"kind":"type","subgraph":"users","type":"User"}]'
+
+
+@join__directive(
+            graphs: [USERS]
+            name: "federation__cacheInvalidation"
+            args: { cacheTag: "user-{$args.userId}" }
+        )
