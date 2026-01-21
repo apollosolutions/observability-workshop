@@ -45,6 +45,15 @@ If you'd like to install those manually, you will need to:
 
 </details>
 
+<details>
+<summary>What if I want to debug the router with a custom codebase?</summary>
+You can set an environment variable called `ROUTER_MANIFEST_FILE` which will be used to compile the router when running the stack. For example:
+
+```bash
+export ROUTER_MANIFEST_FILE="$HOME/rust/router/Cargo.toml"
+```
+</details>
+
 ### Windows
 
 Once you have the prerequisites installed, you can run the `setup.ps1` script included to fetch the additional dependencies.
@@ -59,6 +68,15 @@ If you'd like to install those manually, you will need to:
 - Run `npm install` from the root of the folder to download all required dependencies
 - Download the Apollo Router using Powershell and extract using `tar`
 
+</details>
+
+<details>
+<summary>What if I want to debug the router with a custom codebase?</summary>
+You can set an environment variable called `ROUTER_MANIFEST_FILE` which will be used to compile the router when running the stack. For example:
+
+```bash
+export ROUTER_MANIFEST_FILE="$HOME/rust/router/Cargo.toml"
+```
 </details>
 
 ## Getting oriented
