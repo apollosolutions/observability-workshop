@@ -19,6 +19,11 @@ export type Scalars = {
   _FieldSet: { input: any; output: any; }
 };
 
+export enum CacheControlScope {
+  Private = 'PRIVATE',
+  Public = 'PUBLIC'
+}
+
 export type Post = {
   __typename?: 'Post';
   author: User;
@@ -28,14 +33,31 @@ export type Post = {
   title: Scalars['String']['output'];
 };
 
+export type PostTest = {
+  __typename?: 'PostTest';
+  post?: Maybe<Post>;
+};
+
+
+export type PostTestPostArgs = {
+  id: Scalars['ID']['input'];
+};
+
 export type Query = {
   __typename?: 'Query';
-  post: Post;
-  posts: Array<Post>;
+  post?: Maybe<Post>;
+  postTest?: Maybe<PostTest>;
+  posts?: Maybe<Array<Post>>;
+  topPosts?: Maybe<Array<Post>>;
 };
 
 
 export type QueryPostArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+export type QueryPostTestArgs = {
   id: Scalars['ID']['input'];
 };
 
@@ -128,12 +150,15 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = ResolversObject<{
+  CacheControlScope: ResolverTypeWrapper<DeepPartial<CacheControlScope>>;
   Post: ResolverTypeWrapper<DeepPartial<Post>>;
   String: ResolverTypeWrapper<DeepPartial<Scalars['String']['output']>>;
   ID: ResolverTypeWrapper<DeepPartial<Scalars['ID']['output']>>;
+  PostTest: ResolverTypeWrapper<DeepPartial<PostTest>>;
   Query: ResolverTypeWrapper<{}>;
   User: ResolverTypeWrapper<DeepPartial<User>>;
   Boolean: ResolverTypeWrapper<DeepPartial<Scalars['Boolean']['output']>>;
+  Int: ResolverTypeWrapper<DeepPartial<Scalars['Int']['output']>>;
 }>;
 
 /** Mapping between all available schema types and the resolvers parents */
@@ -141,10 +166,20 @@ export type ResolversParentTypes = ResolversObject<{
   Post: DeepPartial<Post>;
   String: DeepPartial<Scalars['String']['output']>;
   ID: DeepPartial<Scalars['ID']['output']>;
+  PostTest: DeepPartial<PostTest>;
   Query: {};
   User: DeepPartial<User>;
   Boolean: DeepPartial<Scalars['Boolean']['output']>;
+  Int: DeepPartial<Scalars['Int']['output']>;
 }>;
+
+export type CacheControlDirectiveArgs = {
+  inheritMaxAge?: Maybe<Scalars['Boolean']['input']>;
+  maxAge?: Maybe<Scalars['Int']['input']>;
+  scope?: Maybe<CacheControlScope>;
+};
+
+export type CacheControlDirectiveResolver<Result, Parent, ContextType = DataSourceContext, Args = CacheControlDirectiveArgs> = DirectiveResolverFn<Result, Parent, ContextType, Args>;
 
 export type PostResolvers<ContextType = DataSourceContext, ParentType extends ResolversParentTypes['Post'] = ResolversParentTypes['Post']> = ResolversObject<{
   __resolveReference?: ReferenceResolver<Maybe<ResolversTypes['Post']>, { __typename: 'Post' } & GraphQLRecursivePick<ParentType, {"id":true}>, ContextType>;
@@ -156,9 +191,16 @@ export type PostResolvers<ContextType = DataSourceContext, ParentType extends Re
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
+export type PostTestResolvers<ContextType = DataSourceContext, ParentType extends ResolversParentTypes['PostTest'] = ResolversParentTypes['PostTest']> = ResolversObject<{
+  post?: Resolver<Maybe<ResolversTypes['Post']>, ParentType, ContextType, RequireFields<PostTestPostArgs, 'id'>>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
 export type QueryResolvers<ContextType = DataSourceContext, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = ResolversObject<{
-  post?: Resolver<ResolversTypes['Post'], ParentType, ContextType, RequireFields<QueryPostArgs, 'id'>>;
-  posts?: Resolver<Array<ResolversTypes['Post']>, ParentType, ContextType>;
+  post?: Resolver<Maybe<ResolversTypes['Post']>, ParentType, ContextType, RequireFields<QueryPostArgs, 'id'>>;
+  postTest?: Resolver<Maybe<ResolversTypes['PostTest']>, ParentType, ContextType, RequireFields<QueryPostTestArgs, 'id'>>;
+  posts?: Resolver<Maybe<Array<ResolversTypes['Post']>>, ParentType, ContextType>;
+  topPosts?: Resolver<Maybe<Array<ResolversTypes['Post']>>, ParentType, ContextType>;
 }>;
 
 export type UserResolvers<ContextType = DataSourceContext, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = ResolversObject<{
@@ -170,7 +212,11 @@ export type UserResolvers<ContextType = DataSourceContext, ParentType extends Re
 
 export type Resolvers<ContextType = DataSourceContext> = ResolversObject<{
   Post?: PostResolvers<ContextType>;
+  PostTest?: PostTestResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
   User?: UserResolvers<ContextType>;
 }>;
 
+export type DirectiveResolvers<ContextType = DataSourceContext> = ResolversObject<{
+  cacheControl?: CacheControlDirectiveResolver<any, any, ContextType>;
+}>;

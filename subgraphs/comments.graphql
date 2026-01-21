@@ -1,0 +1,35 @@
+extend schema
+    @link(
+        url: "https://specs.apollo.dev/federation/v2.12"
+        import: ["@key", "@shareable", "@external", "@cacheTag"]
+    ) # Enable this schema to use Apollo Federation features
+    @link( # Enable this schema to use Apollo Connectors
+        url: "https://specs.apollo.dev/connect/v0.2"
+        import: ["@connect", "@source"]
+    )
+    @source(name: "comment", http: { baseURL: "http://localhost:3030" })
+
+type Comment {
+    id: ID!
+    post_id: ID!
+    content: String!
+    author: ID!
+}
+
+type Post @key(fields: "id") @cacheTag(format: "post-{$key.id}") {
+    id: ID!
+    comments: [Comment!]
+        @connect(
+            source: "comment"
+            http: {
+                GET: "/comment?post_id={$this.id}"
+                headers: [{ name: "Cache-Control", from: "Cache-Control" }]
+            }
+            selection: """
+            id
+            post_id
+            content
+            author
+            """
+        )
+}

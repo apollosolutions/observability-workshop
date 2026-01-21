@@ -1,0 +1,28 @@
+federation_version: =2.12.1
+subgraphs:
+  posts:
+    routing_url: http://localhost:4002
+    schema:
+      file: ./subgraphs/posts/schema.graphql
+  users:
+    routing_url: http://localhost:4001
+    schema:
+      file: ./subgraphs/users/schema.graphql
+  # comments:
+  # routing_url: http://comments
+  # schema:
+  #   file: ./subgraphs/comments.graphql
+coprocessor:
+  url: http://127.0.0.1:3000 # mandatory URL which is the address of the coprocessor
+  # timeout: 2s # optional timeout (2 seconds in this example). If not set, defaults to 1 second
+  supergraph:
+    request:
+      headers: true
+      context: true
+      body: true
+    response:
+      headers: true
+      # context:
+      #   selective:
+      #     - operation_name
+      body: true

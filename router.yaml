@@ -8,6 +8,32 @@ homepage:
 
 sandbox:
   enabled: true
+connectors:
+  preview_connect_v0_3: true
+  debug_extensions: true
+cors:
+  # Set to false to disallow any origin and rely exclusively on `origins`
+  # Defaults to true
+  allow_any_origin: true
+preview_response_cache:
+  enabled: true
+  debug: true # Needs apollo-cache-debugging header set to "true"
+  invalidation:
+    listen: 0.0.0.0:4000
+    path: /invalidation
+  subgraph:
+    all:
+      enabled: true
+      ttl: 10s
+      invalidation:
+        enabled: true
+        shared_key: ${env.INVALIDATION_SHARED_KEY}
+      redis:
+        urls: ["redis://localhost:6379"]
+    subgraphs:
+      users:
+        enabled: true
+        private_id: "user_id" # context key
 
 telemetry:
   apollo:
@@ -18,6 +44,43 @@ telemetry:
           redact: false
           send: true
   instrumentation:
+    # events:
+    #   subgraph:
+    #     request: info
+    #     response: info
+    instruments:
+      cache: # Cache instruments configuration
+        apollo.router.operations.response.cache: # A counter which counts the number of cache hit and miss for subgraph requests
+          attributes:
+            graphql.type.name: true # Include the entity type name. default: false
+            subgraph.name: # Custom attributes to include the subgraph name in the metric
+              subgraph_name: true
+            supergraph.operation.name: # Add custom attribute to display the supergraph operation name
+              supergraph_operation_name: string
+      # You can add more custom attributes using subgraph selectors
+      router:
+        http.server.request.duration:
+          attributes:
+            http.response.status_code: true
+            graphql.operation.name:
+              operation_name: string
+      subgraph:
+        http.client.request.duration:
+          attributes:
+            subgraph.name: true
+            http.response.status_code:
+              subgraph_response_status: code
+            response.cache.hit:
+              response_cache: hit
+            response.cache.status:
+              response_cache_status: status
+        subgraph.response.cache_control.max_age:
+          value:
+            response_cache_control: max_age
+          type: histogram
+          unit: s # Seconds
+          description: A histogram of the computed TTL for a subgraph response
+
     spans:
       mode: spec_compliant
       router:
@@ -34,17 +97,33 @@ telemetry:
       common:
         service_name: router
         service_namespace: observability-workshop
-        attributes:
-          supergraph:
-            context:
-              - named: has_errors
-          subgraph:
-            all:
-              errors:
-                include_messages: true
-                extensions:
-                  - name: error_code
-                    path: .code
+        views:
+          - name: apollo.router.operations.response_cache.cache_hit
+            aggregation:
+              histogram:
+                buckets:
+                  - 25.0
+                  - 50.0
+                  - 75.0
+                  - 100.0
+          - name: apollo.router.operations.response_cache.fetch.entity
+            aggregation:
+              histogram:
+                buckets:
+                  - 5
+                  - 10
+                  - 50
+                  - 100
+                  - 500
+          - name: subgraph.response.cache_control.max_age # This is to make sure it will use the correct buckets for the max age histogram
+            aggregation:
+              histogram:
+                buckets: # Override default buckets configured for this histogram
+                  - 10
+                  - 100
+                  - 1000
+                  - 10000
+                  - 100000
     tracing:
       propagation:
         jaeger: true
@@ -60,6 +139,12 @@ telemetry:
 include_subgraph_errors:
   all: true
 rhai: {}
+
+headers:
+  all:
+    request:
+      - propagate:
+          named: cache-control
 
 plugins:
   experimental.expose_query_plan: true

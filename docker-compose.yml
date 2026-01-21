@@ -8,6 +8,8 @@ services:
       - ./prometheus:/etc/prometheus
       - prometheus-data:/prometheus
     command: --web.enable-lifecycle  --config.file=/etc/prometheus/prometheus.yml --web.listen-address="0.0.0.0:9000" --web.enable-remote-write-receiver --enable-feature=native-histograms
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
   grafana:
     image: grafana/grafana:10.1.1
     container_name: grafana
@@ -30,5 +32,10 @@ services:
     command: --collector.otlp.grpc.host-port 0.0.0.0:4310 --collector.otlp.http.host-port 0.0.0.0:4311
     ports:
       - 16686:16686
+  redis:
+    container_name: redis
+    image: redis:latest
+    ports:
+      - 6379:6379
 volumes:
   prometheus-data:

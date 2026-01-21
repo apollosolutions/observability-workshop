@@ -9,8 +9,18 @@ export const Query: Resolvers = {
       }
       return await postsAPI.getPosts(ids);
     },
+    topPosts: async (_parent, _, { postsAPI, cacheTags }) => {
+      const ids: string[] = ["1", "2", "3", "4"];
+      // ids.forEach((id) => (cacheTags as string[]).push(`post-${id}`));
+      return await postsAPI.getPosts(ids);
+    },
     post: async (_, { id }, { postsAPI }) => {
       return await postsAPI.getPost(id);
+    },
+    postTest: async (_, { id }, { postsAPI }) => {
+      return {
+        post: await postsAPI.getPost(id)
+      };
     },
   },
 };

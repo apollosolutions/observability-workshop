@@ -1,15 +1,30 @@
 extend schema
   @link(
-    url: "https://specs.apollo.dev/federation/v2.3"
-    import: ["@key", "@requires", "@external"]
+    url: "https://specs.apollo.dev/federation/v2.12"
+    import: ["@key", "@requires", "@external", "@cacheTag"]
   )
+
+
+enum CacheControlScope {
+  PUBLIC
+  PRIVATE
+}
+directive @cacheControl(
+  maxAge: Int
+  scope: CacheControlScope
+  inheritMaxAge: Boolean
+) on FIELD_DEFINITION | OBJECT | INTERFACE | UNION
 
 type Query {
   user(id: ID!): User
   users: [User!]!
 }
 
-type User @key(fields: "id") {
+type Mutation {
+    updateUserEmail(userId: ID!, email: String!): User # @cacheInvalidation(cacheTag: "user-{$args.userId}")
+}
+
+type User @key(fields: "id") @cacheControl(maxAge: 20, scope: PRIVATE) @cacheTag(format: "user-{$key.id}") {
   id: ID!
   name: String!
   email: String!
@@ -31,3 +46,5 @@ type Post @key(fields: "id") {
   id: ID!
   content: String! @external
 }
+
+directive @cacheInvalidation(cacheTag: String, type: String) repeatable on FIELD_DEFINITION

@@ -1,9 +1,25 @@
 extend schema
-  @link(url: "https://specs.apollo.dev/federation/v2.3", import: ["@key"])
+  @link(url: "https://specs.apollo.dev/federation/v2.12", import: ["@key", "@cacheTag"])
+
+  enum CacheControlScope {
+    PUBLIC
+    PRIVATE
+  }
+  directive @cacheControl(
+    maxAge: Int
+    scope: CacheControlScope
+    inheritMaxAge: Boolean
+  ) on FIELD_DEFINITION | OBJECT | INTERFACE | UNION
 
 type Query {
-  posts: [Post!]!
-  post(id: ID!): Post!
+  posts: [Post!]
+  topPosts: [Post!]
+  post(id: ID!): Post
+  postTest(id: ID!): PostTest @cacheTag(format: "post-{$args.id}")
+}
+
+type PostTest @cacheControl(maxAge: 60) {
+    post(id: ID!): Post
 }
 
 type User @key(fields: "id") {

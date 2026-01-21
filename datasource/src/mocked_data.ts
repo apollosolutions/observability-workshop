@@ -1,3 +1,5 @@
+import { FAKE_COMMENT } from "./comments";
+
 export const FAKE_POSTS = [
   {
     id: "ee269a26-819f-41ad-8c15-6d057fd023b3",

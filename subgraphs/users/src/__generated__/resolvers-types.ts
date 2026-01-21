@@ -29,6 +29,22 @@ export type Address = {
   streetAddress2?: Maybe<Scalars['String']['output']>;
 };
 
+export enum CacheControlScope {
+  Private = 'PRIVATE',
+  Public = 'PUBLIC'
+}
+
+export type Mutation = {
+  __typename?: 'Mutation';
+  updateUserEmail?: Maybe<User>;
+};
+
+
+export type MutationUpdateUserEmailArgs = {
+  email: Scalars['String']['input'];
+  userId: Scalars['ID']['input'];
+};
+
 export type Post = {
   __typename?: 'Post';
   content: Scalars['String']['output'];
@@ -141,23 +157,43 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 export type ResolversTypes = ResolversObject<{
   Address: ResolverTypeWrapper<DeepPartial<Address>>;
   String: ResolverTypeWrapper<DeepPartial<Scalars['String']['output']>>;
-  Post: ResolverTypeWrapper<DeepPartial<Post>>;
+  CacheControlScope: ResolverTypeWrapper<DeepPartial<CacheControlScope>>;
+  Mutation: ResolverTypeWrapper<{}>;
   ID: ResolverTypeWrapper<DeepPartial<Scalars['ID']['output']>>;
+  Post: ResolverTypeWrapper<DeepPartial<Post>>;
   Query: ResolverTypeWrapper<{}>;
   User: ResolverTypeWrapper<DeepPartial<User>>;
   Boolean: ResolverTypeWrapper<DeepPartial<Scalars['Boolean']['output']>>;
+  Int: ResolverTypeWrapper<DeepPartial<Scalars['Int']['output']>>;
 }>;
 
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = ResolversObject<{
   Address: DeepPartial<Address>;
   String: DeepPartial<Scalars['String']['output']>;
-  Post: DeepPartial<Post>;
+  Mutation: {};
   ID: DeepPartial<Scalars['ID']['output']>;
+  Post: DeepPartial<Post>;
   Query: {};
   User: DeepPartial<User>;
   Boolean: DeepPartial<Scalars['Boolean']['output']>;
+  Int: DeepPartial<Scalars['Int']['output']>;
 }>;
+
+export type CacheControlDirectiveArgs = {
+  inheritMaxAge?: Maybe<Scalars['Boolean']['input']>;
+  maxAge?: Maybe<Scalars['Int']['input']>;
+  scope?: Maybe<CacheControlScope>;
+};
+
+export type CacheControlDirectiveResolver<Result, Parent, ContextType = DataSourceContext, Args = CacheControlDirectiveArgs> = DirectiveResolverFn<Result, Parent, ContextType, Args>;
+
+export type CacheInvalidationDirectiveArgs = {
+  cacheTag?: Maybe<Scalars['String']['input']>;
+  type?: Maybe<Scalars['String']['input']>;
+};
+
+export type CacheInvalidationDirectiveResolver<Result, Parent, ContextType = DataSourceContext, Args = CacheInvalidationDirectiveArgs> = DirectiveResolverFn<Result, Parent, ContextType, Args>;
 
 export type AddressResolvers<ContextType = DataSourceContext, ParentType extends ResolversParentTypes['Address'] = ResolversParentTypes['Address']> = ResolversObject<{
   city?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
@@ -167,6 +203,10 @@ export type AddressResolvers<ContextType = DataSourceContext, ParentType extends
   streetAddress1?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   streetAddress2?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export type MutationResolvers<ContextType = DataSourceContext, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = ResolversObject<{
+  updateUserEmail?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<MutationUpdateUserEmailArgs, 'email' | 'userId'>>;
 }>;
 
 export type PostResolvers<ContextType = DataSourceContext, ParentType extends ResolversParentTypes['Post'] = ResolversParentTypes['Post']> = ResolversObject<{
@@ -194,8 +234,13 @@ export type UserResolvers<ContextType = DataSourceContext, ParentType extends Re
 
 export type Resolvers<ContextType = DataSourceContext> = ResolversObject<{
   Address?: AddressResolvers<ContextType>;
+  Mutation?: MutationResolvers<ContextType>;
   Post?: PostResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
   User?: UserResolvers<ContextType>;
 }>;
 
+export type DirectiveResolvers<ContextType = DataSourceContext> = ResolversObject<{
+  cacheControl?: CacheControlDirectiveResolver<any, any, ContextType>;
+  cacheInvalidation?: CacheInvalidationDirectiveResolver<any, any, ContextType>;
+}>;
