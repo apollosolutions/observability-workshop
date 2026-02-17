@@ -8,27 +8,19 @@ homepage:
 
 sandbox:
   enabled: true
-connectors:
-  preview_connect_v0_3: true
-  debug_extensions: true
+
 cors:
-  # Set to false to disallow any origin and rely exclusively on `origins`
-  # Defaults to true
   allow_any_origin: true
-experimental_response_cache:
+
+# Response caching with Redis
+preview_response_cache:
   enabled: true
   debug: true
-  invalidation:
-    listen: 0.0.0.0:4000
-    path: /invalidation
   subgraph:
     all:
       enabled: true
       redis:
-        urls: ["redis://localhost:6379"]
-      invalidation:
-        enabled: true
-        shared_key: ${env.INVALIDATION_SHARED_KEY}
+        urls: ["redis://127.0.0.1:6379"]
 
 telemetry:
   apollo:
@@ -39,18 +31,6 @@ telemetry:
           redact: false
           send: true
   instrumentation:
-    # events:
-    #   subgraph:
-    #     response:
-    #       level: info
-    #       condition:
-    #         all:
-    #           - eq:
-    #               - subgraph_name: true
-    #               - static: posts
-    #           - eq:
-    #               - response_cache: hit
-    #               - 0
     instruments:
       cache: # Cache instruments configuration
         apollo.router.operations.response.cache: # A counter which counts the number of cache hit and miss for subgraph requests
@@ -60,7 +40,6 @@ telemetry:
               subgraph_name: true
             supergraph.operation.name: # Add custom attribute to display the supergraph operation name
               supergraph_operation_name: string
-      # You can add more custom attributes using subgraph selectors
       router:
         http.server.request.duration:
           attributes:
@@ -77,7 +56,6 @@ telemetry:
               response_cache: hit
             response.cache.status:
               response_cache_status: status
-
     spans:
       mode: spec_compliant
       router:
@@ -124,8 +102,10 @@ telemetry:
         enabled: true
         endpoint: http://localhost:43178
         protocol: grpc
+
 include_subgraph_errors:
   all: true
+
 rhai: {}
 
 headers:
