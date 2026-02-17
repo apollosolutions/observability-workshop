@@ -16,11 +16,17 @@ cors:
 preview_response_cache:
   enabled: true
   debug: true
+  invalidation:
+    listen: "127.0.0.1:4005"
+    path: "/invalidation"
   subgraph:
     all:
       enabled: true
       redis:
         urls: ["redis://127.0.0.1:6379"]
+      invalidation:
+        enabled: true
+        shared_key: ${env.INVALIDATION_SHARED_KEY}
 
 telemetry:
   apollo:
