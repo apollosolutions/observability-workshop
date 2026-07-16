@@ -43,7 +43,7 @@
     "@graphql-codegen/cli": "^5.0.0",
     "@graphql-codegen/typescript": "^4.0.1",
     "@graphql-codegen/typescript-resolvers": "^4.0.1",
-    "@types/node": "^20.8.2",
+    "@types/node": "^24.0.0",
     "nodemon": "^3.0.1",
     "typescript": "^5.2.2",
     "utility-types": "^3.10.0"
